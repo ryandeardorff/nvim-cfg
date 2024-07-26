@@ -6,23 +6,36 @@ require('telescope').setup {
   },
 }
 
-vim.cmd.colorscheme 'habamax'
-
 return {
   {
-    'sho-87/kanagawa-paper.nvim',
-    enabled = false,
+    'Yazeed1s/oh-lucy.nvim',
     config = function()
-      require('kanagawa-paper').setup()
-      vim.cmd.colorscheme 'kanagawa-paper'
+      -- vim.cmd.colorscheme 'oh-lucy-evening'
+    end,
+  },
+  {
+    'HoNamDuong/hybrid.nvim',
+    config = function()
+      vim.cmd.colorscheme 'hybrid'
+    end,
+  },
+  {
+    'ramojus/mellifluous.nvim',
+    config = function()
+      -- vim.cmd.colorscheme 'mellifluous'
+    end,
+  },
+  { 'AlexvZyl/nordic.nvim' },
+  {
+    'sho-87/kanagawa-paper.nvim',
+    config = function()
+      -- vim.cmd.colorscheme 'kanagawa-paper'
     end,
   },
   {
     'rebelot/kanagawa.nvim',
-    enabled = false,
     config = function()
-      require('kanagawa').setup()
-      vim.cmd.colorscheme 'kanagawa-wave'
+      -- vim.cmd.colorscheme 'kanagawa-wave'
     end,
   },
 }
