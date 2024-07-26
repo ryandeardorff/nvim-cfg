@@ -18,7 +18,7 @@ return {
     -- animation = true,
     -- insert_at_start = true,
     -- …etc.
-    auto_hide = 0,
+    auto_hide = 1,
     no_name_title = ' ',
     exclude_name = { ' ' },
   },
