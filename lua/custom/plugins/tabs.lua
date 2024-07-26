@@ -1,7 +1,8 @@
-vim.keymap.set('n', '<leader>c', '<cmd>BufferClose<CR>')
 vim.keymap.set('n', '<leader>bn', '<cmd>BufferNext<CR>')
 vim.keymap.set('n', '<leader>bb', '<cmd>BufferPrevious<CR>')
 vim.keymap.set('n', '<leader>bj', '<cmd>BufferPick<CR>')
+vim.keymap.set('n', '<leader>bp', '<cmd>BufferPin<CR>')
+vim.keymap.set('n', '<leader>c', '<cmd>BufferClose<CR>')
 
 return {
   'romgrk/barbar.nvim',
@@ -17,6 +18,9 @@ return {
     -- animation = true,
     -- insert_at_start = true,
     -- …etc.
+    auto_hide = 0,
+    no_name_title = ' ',
+    exclude_name = { ' ' },
   },
   version = '^1.0.0', -- optional: only update when a new 1.x version is released
 }
