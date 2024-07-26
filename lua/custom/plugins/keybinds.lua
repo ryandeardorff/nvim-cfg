@@ -3,4 +3,6 @@ vim.keymap.set('n', '<leader>;', '<cmd>Alpha<CR>')
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>')
 vim.keymap.set('n', '<leader>q', '<cmd>:q!<CR>')
 
+vim.keymap.set('n', 'g<S-c>', 'gcc', { remap = true })
+
 return {}
