@@ -579,6 +579,11 @@ require('lazy').setup({
         -- tsserver = {},
         --
         zls = {},
+        pyright = {},
+        ruff = {
+          format_on_save = true,
+        },
+        taplo = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -857,6 +862,7 @@ require('lazy').setup({
     'ahmedkhalf/project.nvim',
     opts = {
       manual_mode = false,
+      patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml' },
     },
     config = function(_, opts)
       require('project_nvim').setup(opts)

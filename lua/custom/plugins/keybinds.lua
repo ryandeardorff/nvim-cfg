@@ -5,4 +5,6 @@ vim.keymap.set('n', '<leader>q', '<cmd>:q!<CR>')
 
 vim.keymap.set('n', 'g<S-c>', 'gcc', { remap = true })
 
+vim.keymap.set('i', 'jj', '<esc>', { remap = true })
+
 return {}
