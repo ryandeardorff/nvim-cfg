@@ -111,9 +111,11 @@ end
 
 StopServer = function()
   local tcp = vim.uv.new_tcp()
+  -- use a tcp connect+close to try to get the server to stop (this was the only thing that seemed to kill it for me 💀)
   tcp:connect(testip, testport, function(err)
     tcp:close()
   end)
+  -- now just try killing it a few times in case it's stuck in the pwsh script, venv or something else
   server:kill(9)
   server:kill(9)
   server:kill(9)
@@ -183,11 +185,11 @@ BootLsp = function()
     StopServer()
   end
   StartServer()
-  -- wait for startup
+  -- wait for startup (loops until client is created)
   local timer = vim.uv.new_timer()
   timer:start(
-    500,
-    2000,
+    700, -- fine tuning this value could improve reload performance, since it's meant to be a short as startup
+    500, -- same with this one, this is just to prevent spamming, but it's for polling so shorter = more frequent = more responsive
     vim.schedule_wrap(function()
       if client then
         timer:stop()
