@@ -578,7 +578,15 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
-        zls = {},
+        zls = {
+          settings = {
+            enable_inlay_hints = true,
+            inlay_hints_show_builtin = true,
+            inlay_hints_exclude_single_argument = true,
+            inlay_hints_hide_redundant_param_names = false,
+            inlay_hints_hid_redundant_param_names_last_token = false,
+          },
+        },
         pyright = {},
         ruff = {
           format_on_save = true,
@@ -891,6 +899,14 @@ require('lazy').setup({
   --
   --  uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    for additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
+  {
+    'ryandeardorff/qfdiagnostics.nvim',
+    dev = true,
+
+    config = function()
+      require('qfdiagnostics').setup()
+    end,
+  },
   { import = 'custom.plugins' },
 }, {
   ui = {
@@ -911,6 +927,10 @@ require('lazy').setup({
       task = '📌',
       lazy = '💤 ',
     },
+  },
+  dev = {
+    path = '~/AppData/Local/nvim/dev/',
+    patterns = {},
   },
 })
 

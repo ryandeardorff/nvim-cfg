@@ -4,6 +4,13 @@ vim.keymap.set('n', '<leader>w', '<cmd>w<CR>')
 vim.keymap.set('n', '<leader>q', '<cmd>:q!<CR>')
 vim.keymap.set('n', '<leader>vs', '<cmd>:vs<CR>')
 
+vim.keymap.set('n', '<c-.>', '<cmd>vertical resize +10<CR>')
+vim.keymap.set('n', '<c-,>', '<cmd>vertical resize -10<CR>')
+vim.keymap.set('n', '<c-right>', '<cmd>vertical resize +10<CR>')
+vim.keymap.set('n', '<c-left>', '<cmd>vertical resize -10<CR>')
+vim.keymap.set('n', '<c-up>', '<cmd>resize +10<CR>')
+vim.keymap.set('n', '<c-down>', '<cmd>resize -10<CR>')
+
 vim.keymap.set('n', 'g<S-c>', 'gcc', { remap = true })
 
 vim.keymap.set('i', 'jj', '<esc>', { remap = true })
