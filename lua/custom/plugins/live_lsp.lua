@@ -1,5 +1,3 @@
-local handle = nil
-local testbuf = nil
 local testip = '127.0.0.1'
 local testport = 8080
 local notif = {}
@@ -31,7 +29,7 @@ DispatchCmds = function(title, cmds, success, fail)
   local stdout = vim.uv.new_pipe()
   local stderr = vim.uv.new_pipe()
   -- NOTE: currently only uses pwsh, so limited to windows atm
-  handle = vim.uv.spawn('pwsh', {
+  vim.uv.spawn('pwsh', {
     stdio = { stdin, stdout, stderr },
   }, function(code, _) -- on exit
     vim.schedule(function()
@@ -89,129 +87,168 @@ LiveLspBuild = function()
   }, 'Successfully built LiveLSP editable installation', 'Failed to build LiveLSP editable installation!')
 end
 
--- Launching (or relaunching) a live development lsp --
-local live_lsp = nil
-LiveLaunchLSP = function()
-  if live_lsp then
-    vim.notify('Shuting down old LiveLSP instance to reload', vim.log.levels.INFO)
-    LiveCloseLSP()
+GetRoot = function()
+  local root_dir = vim.fs.dirname(vim.fs.find({ 'pyproject.toml' }, { upward = true })[1])
+  if not root_dir then
+    vim.notify("Couldn't find root directory for live lsp (expected dir with pyproject.toml + setuptools)!", vim.log.levels.ERROR)
+    return nil
   end
-  vim.notify('Starting up Live development LSP', vim.log.levels.INFO)
-  live_lsp = vim.fn.jobstart('pwsh', {
-    stdout_buffered = false,
-    stderr_buffered = false,
-    on_exit = function(_, code)
-      vim.schedule(function()
-        if code == 0 then
-          vim.notify('LSP Server exited with code (0)', vim.log.levels.INFO)
-        else
-          vim.notify('LSP Server exited with code (' .. code .. ')!', vim.log.levels.ERROR)
-        end
-      end)
-    end,
-    on_stdout = function(_, data)
-      vim.schedule(function()
-        vim.notify(table.concat(data, '\n'):gsub('[\r]', ''), vim.log.levels.INFO)
-      end)
-    end,
-    on_stderr = function(_, data)
-      vim.schedule(function()
-        vim.notify(table.concat(data, '\n'):gsub('[\r]', ''), vim.log.levels.ERROR)
-      end)
-    end,
-  })
-  vim.fn.chansend(live_lsp, {
-    './.env/Scripts/Activate.ps1',
-    'lizzr-ls ' .. '-tcp -a ' .. testip .. ' -p ' .. testport .. '',
-  })
-  -- vim.fn.chanclose(live_lsp, 'stdin')
+  return root_dir
 end
 
-LiveCloseLSP = function()
-  if not live_lsp then
-    vim.notify('There is no development LSP running to close!', vim.log.levels.ERROR)
-    return
-  end
-  vim.fn.chanclose(live_lsp, 'stdin')
-  vim.notify('Issued channel close to shutdown live development LSP', vim.log.levels.INFO)
+local attach_buf = 0
+
+local server
+StartServer = function()
+  local root = GetRoot()
+  server = vim.system({ 'pwsh', './StartTestLSP.ps1' }, {
+    cwd = root,
+    stdin = true,
+  }, function(out)
+    vim.notify('Server closed with code:' .. out.code, vim.log.levels.INFO)
+  end)
 end
 
-local cp = require 'legendary'
-cp.command {
-  ':LiveLspBuild',
-  LiveLspBuild,
-  description = 'Build a editable lsp from a pyproject.toml using setuptools',
-}
-cp.command {
-  ':LiveLaunchLSP',
-  LiveLaunchLSP,
-  description = 'Load or reload a built live LSP from the current pyproject.',
-}
-cp.command {
-  ':LiveCloseLSP',
-  LiveCloseLSP,
-  description = 'Shut down the running development LSP',
-}
+StopServer = function()
+  local tcp = vim.uv.new_tcp()
+  tcp:connect(testip, testport, function(err)
+    tcp:close()
+  end)
+  server:kill(9)
+  server:kill(9)
+  server:kill(9)
+end
 
 local client = nil
-AttachLive = function()
-  KillClient()
-  client = vim.lsp.start {
+local pendingclient = nil
+StartClient = function()
+  if client then
+    vim.notify('Client already started!', vim.log.levels.ERROR)
+    return
+  end
+  pendingclient = vim.lsp.start({
     name = 'live-lsp',
     cmd = function(...)
       return vim.lsp.rpc.connect(testip, testport)(...)
     end,
-    root_dir = vim.fs.root(0, { 'pyproject.toml' }),
-    trace = 'verbose',
-    on_exit = function(code, _, _)
-      if code == 0 then
-        vim.notify('LSP client exited with code 0', vim.log.levels.INFO)
-      else
-        vim.notify('LSP client exited with code ' .. code, vim.log.levels.ERROR)
-        KillClient()
+    on_init = function(_, res)
+      client = pendingclient
+      vim.schedule(function()
+        vim.notify('Live lsp client initialized:' .. vim.inspect(res), vim.log.levels.INFO)
+      end)
+    end,
+    on_exit = function(code, sig, cid)
+      vim.schedule(function()
+        vim.notify('Live lsp client exited: Code=' .. code, ((code == 0) and { vim.log.levels.INFO } or { vim.log.levels.ERROR })[1])
+        client = nil
+      end)
+    end,
+    on_error = function(code, res)
+      vim.schedule(function()
+        require('notify').notify(code .. ':' .. vim.inspect(res), vim.log.levels.ERROR, { title = 'Live LSP Client Error' })
+      end)
+    end,
+  }, { bufnr = attach_buf })
+  -- detect client connection error:
+  local timer = vim.uv.new_timer()
+  timer:start(
+    1000,
+    0,
+    vim.schedule_wrap(function()
+      local cinfo = vim.lsp.get_clients { name = 'live-lsp' }
+      if table.getn(cinfo) == 0 then
+        vim.notify('Timeout: Live LSP could not connect a client!', vim.log.levels.ERROR)
+        StopClient()
+        return
       end
-    end,
-    on_error = function()
-      vim.notify('Error in lsp client', vim.log.levels.ERROR)
-      KillClient()
-    end,
-  }
+      vim.notify('Successfully connected client!', vim.log.levels.INFO)
+      timer:close()
+    end)
+  )
+end
+StopClient = function()
   if not client then
-    KillClient()
+    vim.notify('No existing client to close!', vim.log.levels.ERROR)
   end
-  vim.notify('Successfully started LSP client', vim.log.levels.INFO)
-end
-
-AttachBuf = function()
-  testbuf = vim.api.nvim_get_current_buf()
-  AttachLive()
-  assert(client)
-  local res = vim.lsp.buf_attach_client(testbuf, client)
-  if not res or not vim.lsp.buf_is_attached(testbuf, client) or vim.lsp.client_is_stopped(client) then
-    vim.notify('Failed to create client or attach to buffer', vim.log.levels.ERROR)
-    KillClient()
-  end
-  vim.notify('Successfully attached LSP client to buffer', vim.log.levels.INFO)
-end
-
-KillClient = function()
-  if client then
-    if testbuf then
-      vim.lsp.buf_detach_client(testbuf, client)
-    end
-    vim.lsp.stop_client(client, true)
-  end
+  vim.lsp.stop_client(client, false)
   client = nil
-  vim.notify('Successfully killed LSP client and detached from buffer', vim.log.levels.INFO)
 end
 
-vim.keymap.set('n', '<leader>la', AttachBuf)
-vim.keymap.set('n', '<leader>lk', KillClient)
-vim.keymap.set('n', '<leader>lr', function()
-  KillClient()
-  LiveCloseLSP()
-  LiveLaunchLSP()
-  AttachBuf()
-end)
+--
+BootLsp = function()
+  if client then
+    StopClient()
+  end
+  if server then
+    StopServer()
+  end
+  StartServer()
+  -- wait for startup
+  local timer = vim.uv.new_timer()
+  timer:start(
+    500,
+    2000,
+    vim.schedule_wrap(function()
+      if client then
+        timer:stop()
+        timer:close()
+        return
+      end
+      StartClient()
+    end)
+  )
+end
+
+Attach = function()
+  attach_buf = vim.api.nvim_get_current_buf()
+  -- Autocommand to automatically boot lsp when applicable filetypes change (py, js, json, ts, toml)
+  vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+    pattern = { '*.py', '*.js', '*.json', '*.ts', '*.toml' },
+    callback = function(ev)
+      BootLsp()
+    end,
+  })
+  -- Autocommand to remove the attached buffer and shutdown lsp client when buffer is closed
+  vim.api.nvim_create_autocmd({ 'BufDelete' }, {
+    callback = function(ev)
+      StopClient()
+      attach_buf = 0
+    end,
+  })
+  BootLsp()
+end
+Detach = function() end
+
+local cp = require 'legendary'
+cp.command {
+  ':LLBuild',
+  LiveLspBuild,
+  description = 'Build a editable lsp from a pyproject.toml using setuptools',
+}
+cp.command {
+  ':LLStartClient',
+  StartClient,
+  description = 'Start a LSP client for the current buffer!',
+}
+cp.command {
+  ':LLStartServer',
+  StartServer,
+  description = 'Start a LSP server using the StartTestLSP.ps1 from a root dir with pyproject.toml',
+}
+cp.command {
+  ':LLStopServer',
+  StopServer,
+  description = 'Stop the currently running test LSP server.',
+}
+cp.command {
+  ':LLBoot',
+  BootLsp,
+  description = 'Start or reload both client and server for LSP.',
+}
+cp.command {
+  ':LLAttach',
+  Attach,
+  description = 'Start or reload both client and server for LSP.',
+}
 
 return {}

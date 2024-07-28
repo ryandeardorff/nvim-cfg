@@ -19,6 +19,7 @@ return {
     -- animation = true,
     -- insert_at_start = true,
     -- …etc.
+    -- sidebar_filetypes = { ['neo-tree'] = true },
     auto_hide = 1,
     no_name_title = ' ',
     exclude_name = { ' ' },
