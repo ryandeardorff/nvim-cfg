@@ -105,7 +105,9 @@ StartServer = function()
     cwd = root,
     stdin = true,
   }, function(out)
-    vim.notify('Server closed with code:' .. out.code, vim.log.levels.INFO)
+    vim.schedule(function()
+      require('notify').notify('Server closed with code:' .. out.code, vim.log.levels.INFO, { timeout = 1000 })
+    end)
   end)
 end
 
@@ -136,7 +138,9 @@ StartClient = function()
     on_init = function(_, res)
       client = pendingclient
       vim.schedule(function()
-        vim.notify('Live lsp client initialized:' .. vim.inspect(res), vim.log.levels.INFO)
+        vim.schedule(function()
+          vim.notify('Live lsp client initialized:' .. vim.inspect(res), vim.log.levels.INFO, { timeout = 1000 })
+        end)
       end)
     end,
     on_exit = function(code, sig, cid)
@@ -159,11 +163,13 @@ StartClient = function()
     vim.schedule_wrap(function()
       local cinfo = vim.lsp.get_clients { name = 'live-lsp' }
       if table.getn(cinfo) == 0 then
-        vim.notify('Timeout: Live LSP could not connect a client!', vim.log.levels.ERROR)
-        StopClient()
+        vim.notify('Timeout: Live LSP could not connect a client!', vim.log.levels.ERROR, { timeout = 1000 })
+        if client then
+          StopClient()
+        end
         return
       end
-      vim.notify('Successfully connected client!', vim.log.levels.INFO)
+      vim.notify('Successfully connected client!', vim.log.levels.INFO, { timeout = 1000 })
       timer:close()
     end)
   )
@@ -201,25 +207,41 @@ BootLsp = function()
   )
 end
 
+local acmdpost = nil
+local acmddel = nil
 Attach = function()
+  Detach()
   attach_buf = vim.api.nvim_get_current_buf()
   -- Autocommand to automatically boot lsp when applicable filetypes change (py, js, json, ts, toml)
-  vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+  acmdpost = vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
     pattern = { '*.py', '*.js', '*.json', '*.ts', '*.toml' },
     callback = function(ev)
       BootLsp()
     end,
   })
   -- Autocommand to remove the attached buffer and shutdown lsp client when buffer is closed
-  vim.api.nvim_create_autocmd({ 'BufDelete' }, {
+  acmddel = vim.api.nvim_create_autocmd({ 'BufDelete' }, {
     callback = function(ev)
-      StopClient()
-      attach_buf = 0
+      Detach()
     end,
   })
   BootLsp()
 end
-Detach = function() end
+
+Detach = function()
+  if acmdpost then
+    vim.api.nvim_del_autocmd(acmdpost)
+    acmdpost = nil
+  end
+  if acmddel then
+    vim.api.nvim_del_autocmd(acmddel)
+    acmddel = nil
+  end
+  if client then
+    StopClient()
+  end
+  attach_buf = 0
+end
 
 local cp = require 'legendary'
 cp.command {
@@ -250,7 +272,14 @@ cp.command {
 cp.command {
   ':LLAttach',
   Attach,
-  description = 'Start or reload both client and server for LSP.',
+  description = 'Attach the language server to the current buffer and register autocmds for live reloading on file changes from applicable srcs.',
 }
+cp.command {
+  ':LLDetach',
+  Detach,
+  description = 'Detach the language server from the current buffer and deregister autocmds for live reloading on file changes from applicable srcs.',
+}
+
+vim.keymap.set('n', '<leader>la', '<cmd>:LLAttach<CR>')
 
 return {}
