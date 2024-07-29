@@ -1,8 +1,19 @@
+vim.api.nvim_create_autocmd('QuickFixCmdPost', {
+  callback = function()
+    local diags = vim.diagnostic.fromqflist(vim.fn.getqflist())
+    vim.notify('Trouble qf called, len' .. #diags, vim.log.levels.INFO)
+    if #diags == 0 then
+      vim.cmd [[Trouble qflist close]]
+    else
+      vim.cmd [[Trouble qflist open]]
+    end
+  end,
+})
 return {
   'folke/trouble.nvim',
   cmd = 'Trouble',
   opts = {
-    auto_open = true,
+    auto_open = false,
     {
       modes = {
         mydiags = {
@@ -23,9 +34,9 @@ return {
       },
     },
   },
-  config = function()
-    require('trouble').setup {
-      -- Configure options here (e.g., focus, follow, etc.)
-    }
-  end,
+  -- config = function()
+  --   require('trouble').setup {
+  --     -- Configure options here (e.g., focus, follow, etc.)
+  --   }
+  -- end,
 }

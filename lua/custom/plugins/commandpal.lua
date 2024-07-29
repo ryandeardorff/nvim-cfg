@@ -1,5 +1,6 @@
 vim.keymap.set('n', '<c-S-P>', '<cmd>Legendary<CR>')
 
+---@type LazyPluginSpec
 return {
   'mrjones2014/legendary.nvim',
   -- since legendary.nvim handles all your keymaps/commands,
@@ -8,4 +9,10 @@ return {
   lazy = false,
   -- sqlite is only needed if you want to use frecency sorting
   -- dependencies = { 'kkharji/sqlite.lua' }
+  opts = {
+    extensions = {
+      lazy_nvim = { auto_register = true },
+      which_key = { auto_register = true, do_binding = false },
+    },
+  },
 }

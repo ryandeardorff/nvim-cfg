@@ -907,6 +907,14 @@ require('lazy').setup({
       require('qfdiagnostics').setup()
     end,
   },
+  {
+    'ryandeardorff/qfhighlight.nvim',
+    dev = true,
+
+    config = function()
+      require('qfhighlight').setup()
+    end,
+  },
   { import = 'custom.plugins' },
 }, {
   ui = {
