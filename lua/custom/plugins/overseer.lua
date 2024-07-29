@@ -17,6 +17,8 @@ end, {
   desc = 'Run your makeprg as an Overseer task',
   nargs = '*',
 })
+vim.keymap.set('n', '<leader>om', '<cmd>Make<CR>')
+vim.keymap.set('n', '<leader>oo', '<cmd>OverseerToggle<CR>')
 
 return {
   {
