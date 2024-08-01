@@ -592,6 +592,14 @@ require('lazy').setup({
           format_on_save = true,
         },
         taplo = {},
+        jsonls = {
+          settings = {
+            json = {
+              format = { enable = true },
+            },
+            validate = { enable = true },
+          },
+        },
 
         lua_ls = {
           -- cmd = {...},
