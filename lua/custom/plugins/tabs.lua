@@ -4,6 +4,10 @@ vim.keymap.set('n', '<leader>bj', '<cmd>BufferPick<CR>')
 vim.keymap.set('n', '<leader>bp', '<cmd>BufferPin<CR>')
 vim.keymap.set('n', '<leader>c', '<cmd>BufferClose<CR>')
 vim.keymap.set('n', '<leader><S-c>', '<cmd>BufferDelete!<CR>')
+vim.keymap.set('n', '<leader>bl', '<cmd>BufferCloseBuffersLeft<CR>')
+vim.keymap.set('n', '<leader>br', '<cmd>BufferCloseBuffersRight<CR>')
+vim.keymap.set('n', '<leader>bi', '<cmd>BufferCloseAllButCurrentOrPinned<CR>')
+vim.keymap.set('n', '<leader>bm', '<cmd>BufferMove<CR>')
 
 return {
   'romgrk/barbar.nvim',

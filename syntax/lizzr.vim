@@ -8,7 +8,7 @@ syntax match lizzrComment "\v##\_.{-}##"
 syntax match lizzrComment "\v(#)@<!#[^#].*$"
 highlight link lizzrComment Comment
 
-syntax keyword lizzrKw fn inter imp enum union op comp
+syntax keyword lizzrKw fn inter impl enum union op comp
 syntax keyword lizzrKw ret break cont
 syntax keyword lizzrKw pub priv
 highlight link lizzrKw Keyword
@@ -41,7 +41,7 @@ highlight link lizzrStr String
 syntax match lizzrChar "\v\'.\'"
 highlight link lizzrChar Character
 
-syntax match lizzrStruct "\v\w+\s*(\{|(imp))@="
+syntax match lizzrStruct "\v\w+\s*(\{|(impl))@="
 " Known usages
 syntax match lizzrStruct "\v(:\s*)@<=(\l|\u|_)\w*"
 syntax match lizzrStruct "\v(\u|\l|_)\w*\ze\."
@@ -50,7 +50,7 @@ highlight link lizzrStruct Structure
 syntax match lizzrFunc "\v((fn)\s*)@<=\w*"
 syntax match lizzrFunc "\v((inter)\s*)@<=\w*"
 " Known usages
-syntax match lizzrFunc "\v((imp)\s*)@<=\w*"
+syntax match lizzrFunc "\v((impl)\s*)@<=\w*"
 syntax match lizzrFunc "\v(\u|\l|_)\w+\ze\s*\("
 highlight link lizzrFunc Function
 
