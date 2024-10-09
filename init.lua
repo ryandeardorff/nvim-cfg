@@ -580,6 +580,8 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
+        ols = {},
+        hls = {},
         zls = {
           settings = {
             enable_inlay_hints = true,
@@ -739,6 +741,18 @@ require('lazy').setup({
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
+
+      -- Luasnip snippets for c (and cpp)
+      luasnip.filetype_extend('cpp', { 'c' })
+      luasnip.add_snippets('c', {
+        luasnip.snippet('#guard', {
+          luasnip.function_node(function(_, parent)
+            local rawfn = '' .. parent.snippet.env.TM_FILENAME
+            local fn = string.gsub(string.gsub(string.upper(rawfn), '%.', '_'), ' ', '_')
+            return { '#ifndef ' .. fn, '#define ' .. fn, '', '#endif //' .. fn }
+          end, {}),
+        }),
+      }, { key = 'c' })
 
       cmp.setup {
         snippet = {
