@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 vim.g.no_plugin_maps = true
 
@@ -214,6 +214,13 @@ if not vim.uv.fs_stat(lazypath) then
   end
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
+
+-- add filetype for slang
+vim.filetype.add {
+  extension = {
+    slang = 'shaderslang',
+  },
+}
 
 -- [[ Configure and install plugins ]]
 --
@@ -586,7 +593,11 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
-        ols = {},
+        ts_ls = {},
+        eslint = {},
+        ols = {
+          root_dir = require('lspconfig.util').root_pattern('ols.json', '.git', 'main.odin', 'odinfmt.json'),
+        },
         hls = {},
         nimlsp = {},
         zls = {
@@ -611,6 +622,21 @@ require('lazy').setup({
             validate = { enable = true },
           },
         },
+        slang = {
+          settings = {
+            slang = {
+              inlayHints = {
+                deducedTypes = true,
+              },
+            },
+          },
+          filetypes = {
+            'hlsl',
+            'shaderslang',
+            'slang',
+          },
+        },
+        csharp_ls = {},
 
         lua_ls = {
           -- cmd = {...},
@@ -663,6 +689,15 @@ require('lazy').setup({
               server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
               require('lspconfig')[server_name].setup(server)
             end
+
+            require('lspconfig').slangd.setup {
+              capabilities = capabilities,
+              -- cmd = { 'pwsh', '-command', 'slangd', '--debug' },
+              root_dir = function(fname)
+                return require('lspconfig').util.find_git_ancestor(fname)
+              end,
+              filetypes = { 'shaderslang', 'slang', 'hlsl' },
+            }
           end,
         },
       }
@@ -911,12 +946,17 @@ require('lazy').setup({
     'ahmedkhalf/project.nvim',
     opts = {
       manual_mode = false,
-      patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml' },
+      patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml', 'premake5.lua' },
     },
     config = function(_, opts)
       require('project_nvim').setup(opts)
       require('telescope').load_extension 'projects'
     end,
+  },
+  {
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = {},
   },
 
   -- the following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
@@ -955,6 +995,13 @@ require('lazy').setup({
     config = function()
       require('qfhighlight').setup()
     end,
+  },
+  {
+    'OXY2DEV/markview.nvim',
+    lazy = false,
+    preview = {
+      icon_provider = 'internal', -- "mini" or "devicons"
+    },
   },
   { import = 'custom.plugins' },
 }, {

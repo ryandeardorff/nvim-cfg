@@ -43,6 +43,7 @@ return {
       },
       -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
       { '<F7>', dapui.toggle, desc = 'Debug: See last session result.' },
+      { '<F8>', dap.close, desc = 'Debug: Close' },
       unpack(keys),
     }
   end,
