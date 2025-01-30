@@ -652,8 +652,8 @@ require('lazy').setup({
             },
           },
         },
-        ocamllsp = {},
-        ocamlformat = {},
+        --ocamllsp = {},
+        --ocamlformat = {},
       }
 
       -- Ensure the servers and tools above are installed

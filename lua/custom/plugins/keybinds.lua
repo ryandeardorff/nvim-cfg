@@ -15,4 +15,7 @@ vim.keymap.set('n', 'g<S-c>', 'gcc', { remap = true })
 
 vim.keymap.set('i', 'jj', '<esc>', { remap = true })
 
+vim.keymap.set('n', '<leader>ms', '<cmd>:Markview splitToggle<CR>')
+vim.keymap.set('n', '<leader>mo', '<cmd>:Markview open<CR>')
+
 return {}
