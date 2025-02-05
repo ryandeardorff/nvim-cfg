@@ -35,7 +35,7 @@ highlight link lizzrBool Boolean
 syntax match lizzrConst "\v\d+\.\.\d+"
 highlight link lizzrConst Constant
 
-syntax match lizzrStr "\v\".{-}\""
+syntax match lizzrStr "\v\"(\\.|[^\\\"]){-}\""
 highlight link lizzrStr String
 
 syntax match lizzrChar "\v\'.\'"
