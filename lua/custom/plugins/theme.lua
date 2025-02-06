@@ -38,4 +38,10 @@ return {
       -- vim.cmd.colorscheme 'kanagawa-wave'
     end,
   },
+  {
+    'rafamadriz/neon',
+    config = function()
+      -- vim.cmd.colorscheme 'neon'
+    end,
+  },
 }
