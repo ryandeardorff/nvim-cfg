@@ -947,6 +947,7 @@ require('lazy').setup({
     opts = {
       manual_mode = false,
       patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml', 'premake5.lua' },
+      ignore_lsp = { 'ols' },
     },
     config = function(_, opts)
       require('project_nvim').setup(opts)
@@ -957,6 +958,40 @@ require('lazy').setup({
     'pmizio/typescript-tools.nvim',
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
     opts = {},
+  },
+  {
+    'ray-x/lsp_signature.nvim',
+    event = 'InsertEnter',
+    opts = {
+      bind = true,
+      handler_opts = {
+        border = 'none',
+      },
+      hint_enable = false,
+      hint_prefix = '👁️ ',
+      transparency = 7,
+    },
+    config = function(_, opts)
+      require('lsp_signature').setup(opts)
+    end,
+  },
+  {
+    'f-person/git-blame.nvim',
+    -- load the plugin at startup
+    event = 'VeryLazy',
+    -- Because of the keys part, you will be lazy loading this plugin.
+    -- The plugin wil only load once one of the keys is used.
+    -- If you want to load the plugin at startup, add something like event = "VeryLazy",
+    -- or lazy = false. One of both options will work.
+    opts = {
+      -- your configuration comes here
+      -- for example
+      enabled = false, -- if you want to enable the plugin
+      message_template = '<date> • <summary> • <author>', -- template for the blame message, check the Message template section for more options
+      date_format = '%r', -- template for the date, check Date format section for more options
+      virtual_text_column = 80, -- virtual text start column, check Start virtual text at column section for more options
+      delay = 0,
+    },
   },
 
   -- the following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
