@@ -25,5 +25,7 @@ return {
   {
     'stevearc/overseer.nvim',
     opts = {},
+    lazy = true,
+    keys = { '<leader>om', '<leader>oo', '<leader>or' },
   },
 }

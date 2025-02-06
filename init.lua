@@ -251,6 +251,8 @@ require('lazy').setup({
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
+    lazy = true,
+    event = { 'BufReadPre' },
     opts = {
       signs = {
         add = { text = '+' },
@@ -305,6 +307,7 @@ require('lazy').setup({
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
+    lazy = true,
     event = 'VimEnter',
     branch = '0.1.x',
     dependencies = {
@@ -373,6 +376,7 @@ require('lazy').setup({
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'notify')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -414,6 +418,8 @@ require('lazy').setup({
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
+    lazy = true,
+    event = { 'BufNewFile', 'BufReadPre' },
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
@@ -422,7 +428,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim', opts = {}, event = 'VeryLazy' },
 
       -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
@@ -897,6 +903,7 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    lazy = true,
     build = ':TSUpdate',
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
@@ -944,6 +951,8 @@ require('lazy').setup({
 
   {
     'ahmedkhalf/project.nvim',
+    lazy = true,
+    event = 'VimEnter',
     opts = {
       manual_mode = false,
       patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml', 'premake5.lua' },
@@ -952,10 +961,13 @@ require('lazy').setup({
     config = function(_, opts)
       require('project_nvim').setup(opts)
       require('telescope').load_extension 'projects'
+      require('telescope').load_extension 'notify'
     end,
   },
   {
     'pmizio/typescript-tools.nvim',
+    lazy = true,
+    ft = { 'ts', 'js' },
     dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
     opts = {},
   },
@@ -1006,7 +1018,7 @@ require('lazy').setup({
   require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
@@ -1033,7 +1045,8 @@ require('lazy').setup({
   },
   {
     'OXY2DEV/markview.nvim',
-    lazy = false,
+    lazy = true,
+    ft = 'markdown',
     preview = {
       icon_provider = 'internal', -- "mini" or "devicons"
     },

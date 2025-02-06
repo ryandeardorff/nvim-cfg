@@ -21,6 +21,8 @@ end
 return {
   {
     'MysticalDevil/inlay-hints.nvim',
+    lazy = true,
+    event = { 'BufNewFile', 'BufReadPre' },
     config = function()
       require('inlay-hints').setup()
       require('lspconfig').zls.setup {

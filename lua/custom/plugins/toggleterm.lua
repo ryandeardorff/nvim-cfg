@@ -2,6 +2,8 @@ return {
   {
     'akinsho/toggleterm.nvim',
     version = '*',
+    lazy = true,
+    keys = { '<C-\\>' },
     config = function()
       local powershell_options = {
         shell = vim.fn.executable 'pwsh' == 1 and 'pwsh' or 'powershell',

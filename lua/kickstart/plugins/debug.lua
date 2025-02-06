@@ -9,44 +9,73 @@
 return {
   -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
+  lazy = true,
   -- NOTE: And you can specify dependencies as well
   dependencies = {
     -- Creates a beautiful debugger UI
-    'rcarriga/nvim-dap-ui',
+    { 'rcarriga/nvim-dap-ui', event = 'VeryLazy' },
 
     -- Required dependency for nvim-dap-ui
-    'nvim-neotest/nvim-nio',
+    { 'nvim-neotest/nvim-nio', lazy = true, event = 'VeryLazy' },
 
     -- Installs the debug adapters for you
-    'williamboman/mason.nvim',
-    'jay-babu/mason-nvim-dap.nvim',
+    { 'williamboman/mason.nvim', event = 'VeryLazy' },
+    { 'jay-babu/mason-nvim-dap.nvim', event = 'VeryLazy' },
 
     -- Add your own debuggers here
-    'leoluz/nvim-dap-go',
+    { 'leoluz/nvim-dap-go', event = 'VeryLazy' },
   },
-  keys = function(_, keys)
-    local dap = require 'dap'
-    local dapui = require 'dapui'
-    return {
-      -- Basic debugging keymaps, feel free to change to your liking!
-      { '<F5>', dap.continue, desc = 'Debug: Start/Continue' },
-      { '<F1>', dap.step_into, desc = 'Debug: Step Into' },
-      { '<F2>', dap.step_over, desc = 'Debug: Step Over' },
-      { '<F3>', dap.step_out, desc = 'Debug: Step Out' },
-      { '<leader>b', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
-      {
-        '<leader>B',
-        function()
-          dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-        end,
-        desc = 'Debug: Set Breakpoint',
-      },
-      -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-      { '<F7>', dapui.toggle, desc = 'Debug: See last session result.' },
-      { '<F8>', dap.close, desc = 'Debug: Close' },
-      unpack(keys),
-    }
-  end,
+  keys = {
+    { '<F5>', '<cmd>DapContinue<cr>', desc = 'Debug: Start/Continue' },
+    { '<F1>', '<cmd>DapStepInto<cr>', desc = 'Debug: Step Into' },
+    { '<F2>', '<cmd>DapStepOver<cr>', desc = 'Debug: Step Over' },
+    { '<F3>', '<cmd>DapStepOut<cr>', desc = 'Debug: Step Out' },
+    { '<leader>b', '<cmd>DapToggleBreakpoint<cr>', desc = 'Debug: Toggle Breakpoint' },
+    {
+      '<leader>B',
+      function()
+        require('dap').set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+      end,
+      desc = 'Debug: Set Breakpoint',
+    },
+    {
+      '<F7>',
+      function()
+        require('dapui').toggle()
+      end,
+      desc = 'Debug: See last session result.',
+    },
+    {
+      '<F8>',
+      function()
+        require('dap').close()
+      end,
+      desc = 'Debug: Close',
+    },
+  },
+  -- function(_, keys)
+  --   local dap = require 'dap'
+  --   local dapui = require 'dapui'
+  --   return {
+  --     -- Basic debugging keymaps, feel free to change to your liking!
+  --     { '<F5>', dap.continue, desc = 'Debug: Start/Continue' },
+  --     { '<F1>', dap.step_into, desc = 'Debug: Step Into' },
+  --     { '<F2>', dap.step_over, desc = 'Debug: Step Over' },
+  --     { '<F3>', dap.step_out, desc = 'Debug: Step Out' },
+  --     { '<leader>b', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
+  --     {
+  --       '<leader>B',
+  --       function()
+  --         dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
+  --       end,
+  --       desc = 'Debug: Set Breakpoint',
+  --     },
+  --     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
+  --     { '<F7>', dapui.toggle, desc = 'Debug: See last session result.' },
+  --     { '<F8>', dap.close, desc = 'Debug: Close' },
+  --     unpack(keys),
+  --   }
+  -- end,
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'

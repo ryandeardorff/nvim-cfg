@@ -17,6 +17,5 @@ return {
     require('notify').setup {
       top_down = false,
     }
-    require('telescope').load_extension 'notify'
   end,
 }
