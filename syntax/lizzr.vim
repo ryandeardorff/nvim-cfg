@@ -4,12 +4,13 @@ endif
 
 let b:current_syntax = "lizzr"
 
-syntax match lizzrComment "\v##\_.{-}##"
+"syntax match lizzrComment "\v##\_.{-}##"
 syntax match lizzrComment "\v(#)@<!#[^#].*$"
 highlight link lizzrComment Comment
 
 syntax keyword lizzrKw fn inter impl enum union op comp
-syntax keyword lizzrKw ret break cont
+syntax keyword lizzrKw ret break cont in
+syntax keyword lizzrKw throw catch
 syntax keyword lizzrKw pub priv
 highlight link lizzrKw Keyword
 
@@ -19,7 +20,8 @@ highlight link lizzrCond Conditional
 syntax keyword lizzrRep lp
 highlight link lizzrRep Repeat
 
-syntax keyword lizzrTyp f32 f64 i32 i64 u32 u64
+syntax keyword lizzrTyp f32 f64 i32 i64 u8 u16 u32 u64
+syntax keyword lizzrTyp bool
 syntax keyword lizzrTyp str
 highlight link lizzrTyp Type
 
@@ -48,9 +50,9 @@ syntax match lizzrStruct "\v(\u|\l|_)\w*\ze\."
 highlight link lizzrStruct Structure
 
 syntax match lizzrFunc "\v((fn)\s*)@<=\w*"
-syntax match lizzrFunc "\v((inter)\s*)@<=\w*"
+"syntax match lizzrFunc "\v((inter)\s*)@<=\w*"
 " Known usages
-syntax match lizzrFunc "\v((impl)\s*)@<=\w*"
+"syntax match lizzrFunc "\v((impl)\s*)@<=\w*"
 syntax match lizzrFunc "\v(\u|\l|_)\w+\ze\s*\("
 highlight link lizzrFunc Function
 
@@ -66,4 +68,5 @@ syntax match lizzrOp  "\v\*"
 syntax match lizzrOp  "\v\!"
 syntax match lizzrOp  "\v\?"
 syntax match lizzrOp  "\v\&"
+syntax match lizzrOp  "\v\-\>"
 highlight link lizzrOp Operator
