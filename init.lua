@@ -581,7 +581,11 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
+        clangd = {
+          --cmd = { 'clangd', '--experimental-modules-support' },
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto', 'cppm' },
+        },
+        --cpptools = {},
         -- gopls = {},
         -- pyright = {},
         rust_analyzer = {
@@ -657,6 +661,17 @@ require('lazy').setup({
               -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
+        },
+        ltex = {
+          filetypes = { 'markdown', 'text', 'tex', 'gitcommit' },
+          settings = {
+            ltex = {
+              additionalRules = {
+                enablePickyRules = true,
+              },
+            },
+          },
+          flags = { debounce_text_changes = 300 },
         },
         --ocamllsp = {},
         --ocamlformat = {},

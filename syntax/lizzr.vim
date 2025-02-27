@@ -8,7 +8,7 @@ let b:current_syntax = "lizzr"
 syntax match lizzrComment "\v(#)@<!#[^#].*$"
 highlight link lizzrComment Comment
 
-syntax keyword lizzrKw fn inter impl enum union op comp
+syntax keyword lizzrKw fn inter impl enum union op comp struct
 syntax keyword lizzrKw ret break cont in
 syntax keyword lizzrKw throw catch
 syntax keyword lizzrKw pub priv
@@ -17,7 +17,7 @@ highlight link lizzrKw Keyword
 syntax keyword lizzrCond if else
 highlight link lizzrCond Conditional
 
-syntax keyword lizzrRep lp
+syntax keyword lizzrRep for
 highlight link lizzrRep Repeat
 
 syntax keyword lizzrTyp f32 f64 i32 i64 u8 u16 u32 u64
@@ -59,6 +59,7 @@ highlight link lizzrFunc Function
 syntax keyword lizzrSpecial nil
 highlight link lizzrSpecial Special
 
+syntax match lizzrOp  "\v\..(\=|\<)="
 syntax match lizzrOp  "\v\="
 syntax match lizzrOp  "\v\+"
 syntax match lizzrOp  "\v\/"
