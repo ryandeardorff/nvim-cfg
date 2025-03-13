@@ -1,13 +1,18 @@
+vim.keymap.set('n', '<leader>c', '<cmd>BufferClose<CR>')
+vim.keymap.set('n', '<leader><S-c>', '<cmd>BufferDelete!<CR>')
 vim.keymap.set('n', '<leader>bn', '<cmd>BufferNext<CR>')
 vim.keymap.set('n', '<leader>bb', '<cmd>BufferPrevious<CR>')
 vim.keymap.set('n', '<leader>bj', '<cmd>BufferPick<CR>')
 vim.keymap.set('n', '<leader>bp', '<cmd>BufferPin<CR>')
-vim.keymap.set('n', '<leader>c', '<cmd>BufferClose<CR>')
-vim.keymap.set('n', '<leader><S-c>', '<cmd>BufferDelete!<CR>')
 vim.keymap.set('n', '<leader>bl', '<cmd>BufferCloseBuffersLeft<CR>')
 vim.keymap.set('n', '<leader>br', '<cmd>BufferCloseBuffersRight<CR>')
 vim.keymap.set('n', '<leader>bi', '<cmd>BufferCloseAllButCurrentOrPinned<CR>')
 vim.keymap.set('n', '<leader>bm', '<cmd>BufferMove<CR>')
+
+local auto_hide_num = 1
+if true then
+  auto_hide_num = 500
+end
 
 return {
   'romgrk/barbar.nvim',
@@ -26,7 +31,7 @@ return {
     -- insert_at_start = true,
     -- …etc.
     -- sidebar_filetypes = { ['neo-tree'] = true },
-    auto_hide = 1,
+    auto_hide = auto_hide_num,
     no_name_title = ' ',
     exclude_name = { ' ' },
   },

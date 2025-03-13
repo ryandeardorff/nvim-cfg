@@ -16,7 +16,8 @@ return {
   {
     'HoNamDuong/hybrid.nvim',
     config = function()
-      vim.cmd.colorscheme 'hybrid'
+      -- NOTE: My usual default!
+      -- vim.cmd.colorscheme 'hybrid'
     end,
   },
   {
@@ -42,6 +43,57 @@ return {
     'rafamadriz/neon',
     config = function()
       -- vim.cmd.colorscheme 'neon'
+    end,
+  },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    config = function()
+      -- vim.cmd.colorscheme 'catppuccin'
+    end,
+  },
+  {
+    'slugbyte/lackluster.nvim',
+    config = function()
+      --vim.cmd.colorscheme 'lackluster'
+      -- vim.cmd.colorscheme("lackluster-hack") -- my favorite
+      -- vim.cmd.colorscheme("lackluster-mint")
+    end,
+  },
+  {
+    'dgox16/oldworld.nvim',
+    lazy = false,
+    config = function()
+      --vim.cmd.colorscheme 'oldworld'
+    end,
+  },
+  {
+    'killitar/obscure.nvim',
+    lazy = false,
+    opts = {},
+    config = function()
+      --vim.cmd.colorscheme 'obscure'
+    end,
+  },
+  {
+    'mellow-theme/mellow.nvim',
+    opts = {},
+    config = function()
+      --vim.cmd.colorscheme 'mellow'
+    end,
+  },
+  {
+    'nickkadutskyi/jb.nvim',
+    opts = {},
+    config = function()
+      --vim.cmd.colorscheme 'jb'
+    end,
+  },
+  {
+    'armannikoyan/rusty',
+    opts = {},
+    config = function()
+      vim.cmd.colorscheme 'rusty'
     end,
   },
 }
