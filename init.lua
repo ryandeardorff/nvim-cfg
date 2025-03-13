@@ -983,7 +983,7 @@ require('lazy').setup({
     opts = {
       manual_mode = false,
       patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml', 'premake5.lua' },
-      ignore_lsp = { 'ols' },
+      ignore_lsp = { 'ols', 'lua_ls' },
     },
     config = function(_, opts)
       require('project_nvim').setup(opts)
