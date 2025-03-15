@@ -1,4 +1,4 @@
-local norm_icons = { '', '󰬕', '', '󰉊', '', '󰄛' }
+local norm_icons = { '', '', '', '󰄛' }
 math.randomseed(os.time())
 local mode_map = {
   ['NORMAL'] = norm_icons[math.random(#norm_icons)], --'▲⩗⩘Ν▼►▶◡◯◉',
