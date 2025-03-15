@@ -1056,14 +1056,6 @@ require('lazy').setup({
       require('qfhighlight').setup()
     end,
   },
-  {
-    'OXY2DEV/markview.nvim',
-    lazy = true,
-    ft = 'markdown',
-    preview = {
-      icon_provider = 'internal', -- "mini" or "devicons"
-    },
-  },
   { import = 'custom.plugins' },
 }, {
   ui = {

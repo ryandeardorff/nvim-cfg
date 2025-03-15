@@ -3,10 +3,12 @@ return {
     'stevearc/overseer.nvim',
     opts = {},
     -- lazy = true,
-    -- keys = { '<leader>om', '<leader>oo', '<leader>or' },
-    config = function()
-      local overseer = require 'overseer'
-      overseer.setup()
+    keys = {
+      { '<leader>om', '<cmd>Make<cr>', desc = 'Run makeptr as an overseer task' },
+      { '<leader>oo', '<cmd>OverseerToggle<cr>', desc = 'Toggle overseer' },
+      { '<leader>or', '<cmd>OverseerRun<cr>', desc = 'Run overseer' },
+    },
+    init = function()
       vim.api.nvim_create_user_command('Make', function(params)
         -- Insert args at the '$*' in the makeprg
         local cmd, num_subs = vim.o.makeprg:gsub('%$%*', params.args)
@@ -26,9 +28,6 @@ return {
         desc = 'Run your makeprg as an Overseer task',
         nargs = '*',
       })
-      vim.keymap.set('n', '<leader>om', '<cmd>Make<CR>')
-      vim.keymap.set('n', '<leader>oo', '<cmd>OverseerToggle<CR>')
-      vim.keymap.set('n', '<leader>or', '<cmd>OverseerRun<CR>')
     end,
   },
 }
