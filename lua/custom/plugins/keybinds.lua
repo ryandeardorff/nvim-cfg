@@ -24,4 +24,12 @@ vim.keymap.set('n', '<leader>mo', '<cmd>:Markview open<CR>')
 
 vim.keymap.set('n', '<leader>gb', '<cmd>:GitBlameToggle<CR>')
 
+vim.keymap.set('n', '<leader>td', function()
+  if vim.diagnostic.is_enabled() then
+    vim.diagnostic.disable()
+  else
+    vim.diagnostic.enable()
+  end
+end)
+
 return {}
