@@ -222,6 +222,8 @@ vim.opt.rtp:prepend(lazypath)
 vim.filetype.add {
   extension = {
     slang = 'shaderslang',
+    vert = 'glsl',
+    frag = 'glsl',
   },
 }
 
@@ -574,6 +576,7 @@ require('lazy').setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       --capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
       capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities(capabilities))
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -666,17 +669,23 @@ require('lazy').setup({
             },
           },
         },
-        ltex = {
-          filetypes = { 'markdown', 'text', 'tex', 'gitcommit' },
-          settings = {
-            ltex = {
-              additionalRules = {
-                enablePickyRules = true,
-              },
-            },
-          },
-          flags = { debounce_text_changes = 300 },
+        superhtml = {
+          cmd = { 'superhtml', 'lsp' },
+          filetypes = { 'html', 'superhtml' },
+          root_dir = vim.fs.dirname(vim.fs.find({ '.git' }, { upward = true })[1]),
         },
+        -- ltex = {
+        --   filetypes = { 'markdown', 'text', 'tex', 'gitcommit' },
+        --   settings = {
+        --     ltex = {
+        --       enabled = { 'markdown', 'text', 'tex', 'gitcommit' },
+        --       additionalRules = {
+        --         enablePickyRules = true,
+        --       },
+        --     },
+        --   },
+        --   flags = { debounce_text_changes = 300 },
+        -- },
         --ocamllsp = {},
         --ocamlformat = {},
       }
@@ -919,7 +928,7 @@ require('lazy').setup({
     lazy = true,
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'css', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -968,7 +977,7 @@ require('lazy').setup({
     event = 'VimEnter',
     opts = {
       manual_mode = false,
-      patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml', 'premake5.lua' },
+      patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml', '.vscode', 'pyrightconfig.json', 'premake5.lua' },
       ignore_lsp = { 'ols', 'lua_ls' },
     },
     config = function(_, opts)
