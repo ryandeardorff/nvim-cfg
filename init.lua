@@ -711,7 +711,7 @@ require('lazy').setup({
         handlers = {
           function(server_name)
             if server_name == 'ocamllsp' then
-              require('lspconfig').ocamllsp.setup {
+              vim.lsp.config.ocamllsp.setup {
                 capabilities = capabilities,
                 cmd = { 'pwsh', '-command', 'ocamllsp' },
               }
@@ -721,14 +721,14 @@ require('lazy').setup({
               -- by the server configuration above. Useful when disabling
               -- certain features of an LSP (for example, turning off formatting for tsserver)
               server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-              require('lspconfig')[server_name].setup(server)
+              vim.lsp.config[server_name].setup(server)
             end
 
-            require('lspconfig').slangd.setup {
+            vim.lsp.config.slangd.setup {
               capabilities = capabilities,
               -- cmd = { 'pwsh', '-command', 'slangd', '--debug' },
               root_dir = function(fname)
-                return require('lspconfig').util.find_git_ancestor(fname)
+                return vim.lsp.config.util.find_git_ancestor(fname)
               end,
               filetypes = { 'shaderslang', 'slang', 'hlsl' },
             }
