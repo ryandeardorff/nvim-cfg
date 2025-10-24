@@ -971,20 +971,42 @@ require('lazy').setup({
     },
   },
 
+  -- {
+  --   'ahmedkhalf/project.nvim',
+  --   lazy = true,
+  --   event = 'VimEnter',
+  --   opts = {
+  --     manual_mode = false,
+  --     patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml', '.vscode', 'pyrightconfig.json', 'premake5.lua' },
+  --     ignore_lsp = { 'ols', 'lua_ls' },
+  --   },
+  --   config = function(_, opts)
+  --     require('project_nvim').setup(opts)
+  --     require('telescope').load_extension 'projects'
+  --     require('telescope').load_extension 'notify'
+  --   end,
+  -- },
   {
-    'ahmedkhalf/project.nvim',
-    lazy = true,
-    event = 'VimEnter',
+    'DrKJeff16/project.nvim',
+    version = false, -- Get the latest release
+    dependencies = { -- OPTIONAL
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim',
+      'ibhagwan/fzf-lua',
+    },
+    ---@module 'project'
+
+    ---@type Project.Config.Options
     opts = {
       manual_mode = false,
       patterns = { '.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json', 'pyproject.toml', '.vscode', 'pyrightconfig.json', 'premake5.lua' },
       ignore_lsp = { 'ols', 'lua_ls' },
     },
-    config = function(_, opts)
-      require('project_nvim').setup(opts)
-      require('telescope').load_extension 'projects'
-      require('telescope').load_extension 'notify'
-    end,
+    -- config = function(_, opts)
+    --   require('project_nvim').setup(opts)
+    --   require('telescope').load_extension 'projects'
+    --   require('telescope').load_extension 'notify'
+    -- end,
   },
   {
     'pmizio/typescript-tools.nvim',

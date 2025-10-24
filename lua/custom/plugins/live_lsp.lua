@@ -243,42 +243,42 @@ Detach = function()
   attach_buf = 0
 end
 
-local cp = require 'legendary'
-cp.command {
-  ':LLBuild',
-  LiveLspBuild,
-  description = 'Build a editable lsp from a pyproject.toml using setuptools',
-}
-cp.command {
-  ':LLStartClient',
-  StartClient,
-  description = 'Start a LSP client for the current buffer!',
-}
-cp.command {
-  ':LLStartServer',
-  StartServer,
-  description = 'Start a LSP server using the StartTestLSP.ps1 from a root dir with pyproject.toml',
-}
-cp.command {
-  ':LLStopServer',
-  StopServer,
-  description = 'Stop the currently running test LSP server.',
-}
-cp.command {
-  ':LLBoot',
-  BootLsp,
-  description = 'Start or reload both client and server for LSP.',
-}
-cp.command {
-  ':LLAttach',
-  Attach,
-  description = 'Attach the language server to the current buffer and register autocmds for live reloading on file changes from applicable srcs.',
-}
-cp.command {
-  ':LLDetach',
-  Detach,
-  description = 'Detach the language server from the current buffer and deregister autocmds for live reloading on file changes from applicable srcs.',
-}
+-- local cp = require 'legendary'
+-- cp.command {
+--   ':LLBuild',
+--   LiveLspBuild,
+--   description = 'Build a editable lsp from a pyproject.toml using setuptools',
+-- }
+-- cp.command {
+--   ':LLStartClient',
+--   StartClient,
+--   description = 'Start a LSP client for the current buffer!',
+-- }
+-- cp.command {
+--   ':LLStartServer',
+--   StartServer,
+--   description = 'Start a LSP server using the StartTestLSP.ps1 from a root dir with pyproject.toml',
+-- }
+-- cp.command {
+--   ':LLStopServer',
+--   StopServer,
+--   description = 'Stop the currently running test LSP server.',
+-- }
+-- cp.command {
+--   ':LLBoot',
+--   BootLsp,
+--   description = 'Start or reload both client and server for LSP.',
+-- }
+-- cp.command {
+--   ':LLAttach',
+--   Attach,
+--   description = 'Attach the language server to the current buffer and register autocmds for live reloading on file changes from applicable srcs.',
+-- }
+-- cp.command {
+--   ':LLDetach',
+--   Detach,
+--   description = 'Detach the language server from the current buffer and deregister autocmds for live reloading on file changes from applicable srcs.',
+-- }
 
 vim.keymap.set('n', '<leader>la', '<cmd>:LLAttach<CR>')
 

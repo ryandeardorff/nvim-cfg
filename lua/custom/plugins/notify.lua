@@ -1,15 +1,15 @@
-local cp = require 'legendary'
-cp.command {
-  ':Dismiss',
-  function()
-    require('notify').dismiss {
-      pending = true,
-      silent = true,
-    }
-  end,
-  description = 'Dismisses all notifications',
-}
-
+-- local cp = require 'legendary'
+-- cp.command {
+--   ':Dismiss',
+--   function()
+--     require('notify').dismiss {
+--       pending = true,
+--       silent = true,
+--     }
+--   end,
+--   description = 'Dismisses all notifications',
+-- }
+--
 return {
   'rcarriga/nvim-notify',
   config = function()
