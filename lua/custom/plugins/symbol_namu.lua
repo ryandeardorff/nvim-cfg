@@ -11,6 +11,18 @@ return {
       desc = 'Jump to LSP symbol',
       silent = true,
     })
+    vim.keymap.set('n', '<leader>ss', ':Namu workspace<cr>', {
+      desc = 'Search in the workspace',
+      silent = true,
+    })
+    vim.keymap.set('n', '<leader>so', ':Namu watchtower<cr>', {
+      desc = 'Search open files',
+      silent = true,
+    })
+    vim.keymap.set('n', '<leader>st', ':Namu treesitter<cr>', {
+      desc = 'Search treesitter',
+      silent = true,
+    })
     vim.keymap.set('n', '<leader>th', ':Namu colorscheme<cr>', {
       desc = 'Colorscheme Picker',
       silent = true,
