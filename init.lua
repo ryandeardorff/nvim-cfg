@@ -17,11 +17,39 @@ vim.diagnostic.config({ virtual_text = true })
 -- keybinds --
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q!<cr>")
+vim.keymap.set("n", "<C-q>", "<cmd>q!<cr>")
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<cr>")
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>")
 vim.keymap.set("n", "<leader>f", function()
 	require("conform").format({ async = true, lsp_fallbacke = true })
 end)
+-- panel management
+vim.keymap.set("n", "<leader>vs", "<cmd>vs<cr>")
+vim.keymap.set("n", "<leader>hs", "<cmd>split<cr>")
+vim.keymap.set("n", "<C-h>", "<C-w>h")
+vim.keymap.set("n", "<C-j>", "<C-w>j")
+vim.keymap.set("n", "<C-k>", "<C-w>k")
+vim.keymap.set("n", "<C-l>", "<C-w>l")
+-- terminals
+vim.keymap.set("n", "<C-\\>", function()
+	_G.main_terminal_toggle:toggle()
+end)
+vim.keymap.set("n", "<leader>\\", function()
+	_G.new_terminal()
+end)
+function _G.set_terminal_keymaps()
+	local opts = { buffer = 0 }
+	vim.keymap.set("t", "<esc><esc>", [[<C-\><C-n>]], opts) -- pop out of terminal input while staying in term
+	-- navigation & management
+	vim.keymap.set("t", "<C-h>", [[<cmd>wincmd h<cr>]], opts)
+	vim.keymap.set("t", "<C-j>", [[<cmd>wincmd j<cr>]], opts)
+	vim.keymap.set("t", "<C-k>", [[<cmd>wincmd k<cr>]], opts)
+	vim.keymap.set("t", "<C-l>", [[<cmd>wincmd l<cr>]], opts)
+	vim.keymap.set("t", "<C-q>", [[<cmd>q!<cr>]], opts)
+	vim.keymap.set("t", "<C-\\>", [[<cmd>lua _G.main_terminal_toggle:toggle()<cr>]])
+	vim.keymap.set("t", "<leader>\\", [[<cmd>lua _G.new_terminal()<cr>]])
+end
+vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
 
 -- lsp keybinds
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -122,6 +150,17 @@ vim.pack.add({
 	{ src = "https://github.com/kdheepak/lazygit.nvim" },
 })
 
+-- toggleterm.nvim (terminal) --
+vim.pack.add({
+	{ src = "https://github.com/akinsho/toggleterm.nvim" },
+})
+require("toggleterm").setup({})
+local Terminal = require("toggleterm.terminal").Terminal
+_G.main_terminal_toggle = Terminal:new({ cmd = "nu", hidden = true, direction = "float" })
+_G.new_terminal = function()
+	Terminal:new({ cmd = "nu", hidden = false, direction = "horizontal" }):toggle()
+end
+
 -- mini.pairs (autopairs) --
 vim.pack.add({
 	{ src = "https://github.com/nvim-mini/mini.pairs" },
@@ -134,7 +173,7 @@ vim.pack.add({
 })
 require("neoscroll").setup({
 	easing = "sine",
-	duration_multiplier = 0.001,
+	duration_multiplier = 0.2,
 })
 
 -- smear cursor --
