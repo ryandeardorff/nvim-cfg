@@ -9,13 +9,16 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.o.shiftwidth = 4
+vim.o.tabstop = 4
+vim.o.scrolloff = 10
+vim.o.cursorline = true
 vim.diagnostic.config({ virtual_text = true })
 
 -- keybinds --
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q!<cr>")
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<cr>")
-vim.keymap.set("n", "<leader>g", "<cmd>LazyGit<cr>")
+vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>")
 vim.keymap.set("n", "<leader>f", function()
 	require("conform").format({ async = true, lsp_fallbacke = true })
 end)
