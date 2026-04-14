@@ -4,6 +4,7 @@
 -- - tree-sitter cli
 -- - lua-language-server
 -- - stylua
+-- - fd (fast alternative to find, used by projects search)
 
 -- opts --
 vim.g.mapleader = " "
@@ -20,8 +21,23 @@ vim.keymap.set("n", "<leader>q", "<cmd>q!<cr>")
 vim.keymap.set("n", "<C-q>", "<cmd>q!<cr>")
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<cr>")
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>")
+-- format
 vim.keymap.set("n", "<leader>f", function()
 	require("conform").format({ async = true, lsp_fallbacke = true })
+end)
+-- open dashboard
+vim.keymap.set("n", "<leader>;", function()
+	Snacks.dashboard()
+end)
+-- searching
+vim.keymap.set("n", "<leader>sf", function()
+	Snacks.picker.files()
+end)
+vim.keymap.set("n", "<leader>sg", function()
+	Snacks.picker.grep()
+end)
+vim.keymap.set("n", "<leader>sp", function()
+	Snacks.picker.projects()
 end)
 -- panel management
 vim.keymap.set("n", "<leader>vs", "<cmd>vs<cr>")
@@ -124,6 +140,43 @@ require("blink.cmp").setup({
 	},
 })
 
+-- snacks (pickers and more) --
+vim.pack.add({
+	{ src = "https://github.com/folke/snacks.nvim" },
+})
+require("snacks").setup({
+	picker = { enabled = true },
+	dashboard = {
+		enabled = true,
+		sections = {
+			{ section = "header" },
+			{ section = "keys", padding = 1 },
+			{ icon = " ", title = "Projects", section = "projects", padding = 1, indent = 1 },
+			{ icon = "󱦟 ", title = "Recent Files", section = "recent_files", padding = 1, indent = 1 },
+		},
+		preset = {
+			keys = {
+				{ key = "p", desc = "Find Project", action = ":lua Snacks.dashboard.pick('projects')" },
+				{
+					key = "f",
+					desc = "Find Recent File",
+					action = function()
+						Snacks.picker.recent({
+							finder = "recent_files",
+							format = "file",
+							paths = {
+								[vim.fn.stdpath("data")] = false,
+								[vim.fn.stdpath("cache")] = false,
+								[vim.fn.stdpath("state")] = false,
+							},
+						})
+					end,
+				},
+			},
+		},
+	},
+})
+
 -- conform.nvim (formatting) --
 vim.pack.add({
 	{ src = "https://github.com/stevearc/conform.nvim" },
@@ -185,6 +238,43 @@ require("smear_cursor").setup({
 	trailing_stiffness = 0.5,
 	distance_stop_animating = 0.5,
 	legacy_computing_symbols_support = false,
-	particles_enabled = true,
-	min_distance_emit_particles = 1.0,
 })
+
+-- color schemes --
+vim.pack.add({
+	"https://github.com/rebelot/kanagawa.nvim",
+	"https://github.com/olimorris/onedarkpro.nvim",
+	"https://github.com/AlexvZyl/nordic.nvim",
+})
+
+-- color scheme loading --
+local function get_saved_colorscheme(default)
+	-- load ShaDa so persisted globals are available early
+	pcall(vim.cmd.rshada)
+	return vim.g.COLORS_NAME or default
+end
+
+local function save_colorscheme(name)
+	name = name or vim.g.colors_name
+	if not name or vim.g.COLORS_NAME == name then
+		return
+	end
+	vim.g.COLORS_NAME = name
+	pcall(vim.cmd.wshada)
+end
+
+-- apply saved colorscheme on startup
+local saved = get_saved_colorscheme("habamax")
+pcall(vim.cmd.colorscheme, saved)
+vim.keymap.set("n", "<leader>th", function()
+	Snacks.picker.colorschemes({
+		confirm = function(picker, item)
+			-- preserve Snacks' normal behavior
+			local source = require("snacks.picker.config.sources").colorschemes
+			source.confirm(picker, item)
+
+			-- persist selection
+			save_colorscheme(item.text)
+		end,
+	})
+end, { desc = "Pick colorscheme" })
