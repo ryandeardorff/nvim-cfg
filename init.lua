@@ -227,6 +227,7 @@ vim.pack.add({
 require("neoscroll").setup({
 	easing = "sine",
 	duration_multiplier = 0.2,
+	hide_cursor =false,
 })
 
 -- smear cursor --
@@ -245,6 +246,7 @@ vim.pack.add({
 	"https://github.com/rebelot/kanagawa.nvim",
 	"https://github.com/olimorris/onedarkpro.nvim",
 	"https://github.com/AlexvZyl/nordic.nvim",
+	"https://github.com/slugbyte/lackluster.nvim",
 })
 
 -- color scheme loading --
