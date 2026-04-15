@@ -381,6 +381,11 @@ _G.new_terminal = function()
 	Terminal:new({ cmd = "nu", hidden = false, direction = "horizontal" }):toggle()
 end
 
+-- satellite.nvim (scrollbar) --
+vim.pack.add({
+	"https://github.com/lewis6991/satellite.nvim",
+})
+
 -- mini.pairs (autopairs) --
 vim.pack.add({
 	{ src = "https://github.com/nvim-mini/mini.pairs" },
