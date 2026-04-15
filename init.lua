@@ -362,4 +362,6 @@ require("smear_cursor").setup({
 	trailing_stiffness = 0.5,
 	distance_stop_animating = 0.5,
 	legacy_computing_symbols_support = false,
+	particles_enabled = true,
+	min_distance_emit_particles = 1.0,
 })
