@@ -13,6 +13,7 @@ vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.scrolloff = 10
 vim.o.cursorline = true
+vim.o.number = true
 vim.diagnostic.config({ virtual_text = true })
 
 -- keybinds --
@@ -177,70 +178,6 @@ require("snacks").setup({
 	},
 })
 
--- conform.nvim (formatting) --
-vim.pack.add({
-	{ src = "https://github.com/stevearc/conform.nvim" },
-})
-require("conform").setup({
-	formatters_by_ft = {
-		lua = { "stylua" },
-	},
-})
-
--- neo-tree (file side bar) --
-vim.pack.add({
-	{ src = "https://github.com/nvim-neo-tree/neo-tree.nvim", version = vim.version.range("3") },
-	-- dependencies
-	"https://github.com/nvim-lua/plenary.nvim",
-	"https://github.com/MunifTanjim/nui.nvim",
-	-- optional, but recommended
-	"https://github.com/nvim-tree/nvim-web-devicons",
-})
-require("neo-tree").setup({})
-
--- lazygit --
-vim.pack.add({
-	{ src = "https://github.com/kdheepak/lazygit.nvim" },
-})
-
--- toggleterm.nvim (terminal) --
-vim.pack.add({
-	{ src = "https://github.com/akinsho/toggleterm.nvim" },
-})
-require("toggleterm").setup({})
-local Terminal = require("toggleterm.terminal").Terminal
-_G.main_terminal_toggle = Terminal:new({ cmd = "nu", hidden = true, direction = "float" })
-_G.new_terminal = function()
-	Terminal:new({ cmd = "nu", hidden = false, direction = "horizontal" }):toggle()
-end
-
--- mini.pairs (autopairs) --
-vim.pack.add({
-	{ src = "https://github.com/nvim-mini/mini.pairs" },
-})
-require("mini.pairs").setup()
-
--- smooth scroll --
-vim.pack.add({
-	{ src = "https://github.com/karb94/neoscroll.nvim" },
-})
-require("neoscroll").setup({
-	easing = "sine",
-	duration_multiplier = 0.2,
-	hide_cursor =false,
-})
-
--- smear cursor --
-vim.pack.add({
-	{ src = "https://github.com/sphamba/smear-cursor.nvim" },
-})
-require("smear_cursor").setup({
-	stiffness = 0.8,
-	trailing_stiffness = 0.5,
-	distance_stop_animating = 0.5,
-	legacy_computing_symbols_support = false,
-})
-
 -- color schemes --
 vim.pack.add({
 	"https://github.com/rebelot/kanagawa.nvim",
@@ -280,3 +217,149 @@ vim.keymap.set("n", "<leader>th", function()
 		end,
 	})
 end, { desc = "Pick colorscheme" })
+
+-- lualine (status line) --
+vim.pack.add({
+	"https://github.com/nvim-lualine/lualine.nvim",
+})
+
+-- theming
+local function hex(n)
+	return n and string.format("#%06x", n) or nil
+end
+local function get_bg(group)
+	local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+	return hex(hl.bg)
+end
+local function get_fg(group)
+	local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+	return hex(hl.fg)
+end
+
+local theme = require("lualine.themes.auto")
+for _, mode in ipairs({ "normal", "insert", "visual", "replace", "command", "inactive" }) do
+	theme[mode] = theme[mode] or {}
+	local bg = get_bg("Normal")
+	theme[mode].a.fg = theme[mode].a.bg
+	for _, section in ipairs({ "a", "b", "c" }) do
+		theme[mode][section] = theme[mode][section] or {}
+		theme[mode][section].bg = bg
+	end
+end
+
+-- merged cmdline
+vim.o.cmdheight = 0
+vim.o.laststatus = 3
+
+function IsRecording()
+	local reg = vim.fn.reg_recording()
+	if reg == "" then
+		return ""
+	end -- not recording
+	local animated = {
+		"○",
+		"◉",
+	}
+	return animated[os.date("%S") % #animated + 1] .. " " .. reg
+end
+
+require("lualine").setup({
+	options = {
+		theme = theme,
+		component_separators = "",
+		section_separators = { left = "", right = "" },
+	},
+	sections = {
+		lualine_a = { {
+			"mode",
+			fmt = function(str)
+				return string.lower(str):sub(1, 1)
+			end,
+		} },
+		lualine_b = { { "branch", icon = "", color = { fg = get_fg("Special") } }, "diff" },
+		lualine_c = { '"⋅"', "filename" },
+		lualine_x = {},
+		lualine_y = { { "IsRecording()", color = { fg = get_fg("Error") } }, "diagnostics" },
+		lualine_z = { "selectioncount", "progress" },
+	},
+})
+
+-- conform.nvim (formatting) --
+vim.pack.add({
+	{ src = "https://github.com/stevearc/conform.nvim" },
+})
+require("conform").setup({
+	formatters_by_ft = {
+		lua = { "stylua" },
+	},
+})
+
+-- neo-tree (file side bar) --
+vim.pack.add({
+	{ src = "https://github.com/nvim-neo-tree/neo-tree.nvim", version = vim.version.range("3") },
+	-- dependencies
+	"https://github.com/nvim-lua/plenary.nvim",
+	"https://github.com/MunifTanjim/nui.nvim",
+	-- optional, but recommended
+	"https://github.com/nvim-tree/nvim-web-devicons",
+})
+require("neo-tree").setup({})
+
+-- lazygit --
+vim.pack.add({
+	{ src = "https://github.com/kdheepak/lazygit.nvim" },
+})
+
+-- gitsigns.nvim --
+vim.pack.add({
+	"https://github.com/lewis6991/gitsigns.nvim",
+})
+require("gitsigns").setup({
+	current_line_blame = true,
+	current_line_blame_opts = {
+		delay = 500,
+	},
+})
+
+-- diffview.nvim --
+vim.pack.add({
+	"https://github.com/sindrets/diffview.nvim",
+})
+
+-- toggleterm.nvim (terminal) --
+vim.pack.add({
+	{ src = "https://github.com/akinsho/toggleterm.nvim" },
+})
+require("toggleterm").setup({})
+local Terminal = require("toggleterm.terminal").Terminal
+_G.main_terminal_toggle = Terminal:new({ cmd = "nu", hidden = true, direction = "float" })
+_G.new_terminal = function()
+	Terminal:new({ cmd = "nu", hidden = false, direction = "horizontal" }):toggle()
+end
+
+-- mini.pairs (autopairs) --
+vim.pack.add({
+	{ src = "https://github.com/nvim-mini/mini.pairs" },
+})
+require("mini.pairs").setup()
+
+-- smooth scroll --
+vim.pack.add({
+	{ src = "https://github.com/karb94/neoscroll.nvim" },
+})
+require("neoscroll").setup({
+	easing = "sine",
+	duration_multiplier = 0.2,
+	hide_cursor = false,
+})
+
+-- smear cursor --
+vim.pack.add({
+	{ src = "https://github.com/sphamba/smear-cursor.nvim" },
+})
+require("smear_cursor").setup({
+	stiffness = 0.8,
+	trailing_stiffness = 0.5,
+	distance_stop_animating = 0.5,
+	legacy_computing_symbols_support = false,
+})
