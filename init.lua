@@ -22,6 +22,9 @@ vim.keymap.set("n", "<leader>q", "<cmd>q!<cr>")
 vim.keymap.set("n", "<C-q>", "<cmd>q!<cr>")
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<cr>")
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>")
+vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewFileHistory<cr>")
+vim.keymap.set("n", "<leader>gdf", "<cmd>DiffviewFileHistory %<cr>")
+vim.keymap.set("v", "<leader>gd", [[<cmd>'<,'>DiffviewFileHistory<cr>]])
 -- format
 vim.keymap.set("n", "<leader>f", function()
 	require("conform").format({ async = true, lsp_fallbacke = true })
@@ -324,6 +327,22 @@ require("gitsigns").setup({
 -- diffview.nvim --
 vim.pack.add({
 	"https://github.com/sindrets/diffview.nvim",
+})
+require("diffview").setup({
+	keymaps = {
+		view = {
+			{ "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
+			{ "n", "<leader>q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
+		},
+		file_panel = {
+			{ "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
+			{ "n", "<leader>q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
+		},
+		file_history_panel = {
+			{ "n", "q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
+			{ "n", "<leader>q", "<Cmd>DiffviewClose<CR>", { desc = "Close diffview" } },
+		},
+	},
 })
 
 -- toggleterm.nvim (terminal) --
