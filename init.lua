@@ -41,6 +41,9 @@ vim.keymap.set("n", "<leader>;", function()
 	Snacks.dashboard()
 end)
 -- searching
+vim.keymap.set("n", "<leader>sm", function()
+	Snacks.picker.smart()
+end)
 vim.keymap.set("n", "<leader>sf", function()
 	Snacks.picker.files()
 end)
@@ -49,6 +52,15 @@ vim.keymap.set("n", "<leader>sg", function()
 end)
 vim.keymap.set("n", "<leader>sp", function()
 	Snacks.picker.projects()
+end)
+vim.keymap.set("n", "<leader>sr", function()
+	Snacks.picker.lsp_references()
+end)
+vim.keymap.set("n", "<leader>ss", function()
+	Snacks.picker.lsp_workspace_symbols()
+end)
+vim.keymap.set("n", "<leader>sds", function()
+	Snacks.picker.lsp_symbols()
 end)
 -- panel management
 vim.keymap.set("n", "<leader>vs", "<cmd>vs<cr>")
@@ -156,7 +168,7 @@ vim.pack.add({
 	{ src = "https://github.com/folke/snacks.nvim" },
 })
 require("snacks").setup({
-	picker = { enabled = true },
+	picker = { enabled = true, fuzzy = true },
 	dashboard = {
 		enabled = true,
 		sections = {
