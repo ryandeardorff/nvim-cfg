@@ -5,6 +5,7 @@
 -- - lua-language-server
 -- - stylua
 -- - fd (fast alternative to find, used by projects search)
+-- - roslyn-language-server (for c#)
 
 -- opts --
 vim.g.mapleader = " "
@@ -136,6 +137,21 @@ vim.lsp.config("lua_ls", {
 })
 vim.lsp.enable({ "lua_ls" })
 
+-- roslyn.nvim (C#) --
+vim.pack.add({
+	"https://github.com/seblyng/roslyn.nvim",
+})
+require("roslyn")
+vim.lsp.config("roslyn", {
+	cmd = {
+		"roslyn-language-server",
+		"--logLevel=Information",
+		"--extensionLogDirectory=C:/Users/Ryan/AppData/Local/nvim-data",
+		"--stdio",
+	},
+})
+vim.lsp.enable("roslyn")
+
 -- treesitter --
 vim.pack.add({
 	"https://github.com/neovim-treesitter/nvim-treesitter",
@@ -175,7 +191,17 @@ vim.pack.add({
 	{ src = "https://github.com/folke/snacks.nvim" },
 })
 require("snacks").setup({
-	picker = { enabled = true, fuzzy = true },
+	picker = {
+		enabled = true,
+		fuzzy = true,
+		sources = {
+			projects = {
+				patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "package.json", "Makefile", ".plastic" },
+				recent = true,
+				max_depth = 4,
+			},
+		},
+	},
 	dashboard = {
 		enabled = true,
 		sections = {
