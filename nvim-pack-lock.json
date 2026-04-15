@@ -101,6 +101,10 @@
     "tree-sitter-manager.nvim": {
       "rev": "fa63bc63ae08b661843d9976a43becfbd3daf76c",
       "src": "https://github.com/romus204/tree-sitter-manager.nvim"
+    },
+    "treesitter-parser-registry": {
+      "rev": "6eb15358bb9fc88f0d3401d8538d56652e9bdf3c",
+      "src": "https://github.com/neovim-treesitter/treesitter-parser-registry"
     }
   }
 }

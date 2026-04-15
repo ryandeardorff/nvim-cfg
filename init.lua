@@ -138,7 +138,8 @@ vim.lsp.enable({ "lua_ls" })
 
 -- treesitter --
 vim.pack.add({
-	{ src = "https://github.com/neovim-treesitter/nvim-treesitter" },
+	"https://github.com/neovim-treesitter/nvim-treesitter",
+	"https://github.com/neovim-treesitter/treesitter-parser-registry",
 })
 require("nvim-treesitter").install({ "lua", "rust", "c", "odin" })
 vim.api.nvim_create_autocmd("FileType", {
