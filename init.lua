@@ -25,6 +25,13 @@ vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>")
 vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewFileHistory<cr>")
 vim.keymap.set("n", "<leader>gdf", "<cmd>DiffviewFileHistory %<cr>")
 vim.keymap.set("v", "<leader>gd", [[<cmd>'<,'>DiffviewFileHistory<cr>]])
+vim.keymap.set("n", "<Esc>", function()
+	if vim.v.hlsearch == 1 then
+		vim.cmd("nohlsearch")
+	else
+		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+	end
+end, { silent = true, desc = "Clear search highlight" })
 -- format
 vim.keymap.set("n", "<leader>f", function()
 	require("conform").format({ async = true, lsp_fallbacke = true })
