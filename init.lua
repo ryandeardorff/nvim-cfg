@@ -305,10 +305,6 @@ for _, mode in ipairs({ "normal", "insert", "visual", "replace", "command", "ina
 	end
 end
 
--- merged cmdline
-vim.o.cmdheight = 0
-vim.o.laststatus = 3
-
 function IsRecording()
 	local reg = vim.fn.reg_recording()
 	if reg == "" then
@@ -414,6 +410,14 @@ end
 -- satellite.nvim (scrollbar) --
 vim.pack.add({
 	"https://github.com/lewis6991/satellite.nvim",
+})
+
+-- fidget.nvim (notification/status msgs) --
+vim.pack.add({ "https://github.com/j-hui/fidget.nvim" })
+require("fidget").setup({
+	notification = {
+		override_vim_notify = true,
+	},
 })
 
 -- mini.pairs (autopairs) --
