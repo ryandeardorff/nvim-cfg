@@ -16,6 +16,9 @@ vim.o.scrolloff = 10
 vim.o.cursorline = true
 vim.o.number = true
 vim.diagnostic.config({ virtual_text = true })
+-- autoread on changes live (when no changes are made to a buffer/file)
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, { command = "checktime" })
 
 -- keybinds --
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
