@@ -179,7 +179,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- blink.cmp --
+-- blink.cmp (completion)--
 vim.pack.add({
 	{ src = "https://github.com/saghen/blink.cmp", version = "v1.10.2" },
 })
@@ -195,6 +195,12 @@ require("blink.cmp").setup({
 	completion = {
 		documentation = { auto_show = true },
 	},
+})
+
+-- lsp_signature.nvim (function signature while typing params/arguments) --
+vim.pack.add({ "https://github.com/ray-x/lsp_signature.nvim" })
+require("lsp_signature").setup({
+	zindex = 1000,
 })
 
 -- snacks (pickers and more) --
