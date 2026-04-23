@@ -444,3 +444,9 @@ require("smear_cursor").setup({
 	particles_enabled = true,
 	min_distance_emit_particles = 1.0,
 })
+
+-- sidekick.nvim (AI, using this for now) --
+vim.pack.add({
+	{ src = "https://github.com/folke/sidekick.nvim" },
+})
+require("sidekick").setup({})

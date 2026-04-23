@@ -86,6 +86,10 @@
       "rev": "62b0aa1a941e35e694e8a50b589150bcca8c084d",
       "src": "https://github.com/lewis6991/satellite.nvim"
     },
+    "sidekick.nvim": {
+      "rev": "208e1c5b8170c01fd1d07df0139322a76479b235",
+      "src": "https://github.com/folke/sidekick.nvim"
+    },
     "smear-cursor.nvim": {
       "rev": "c85bdbb25db096fbcf616bc4e1357bd61fe2c199",
       "src": "https://github.com/sphamba/smear-cursor.nvim"
