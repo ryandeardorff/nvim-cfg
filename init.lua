@@ -23,6 +23,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
 -- keybinds --
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q!<cr>")
+vim.keymap.set("n", "<leader>Q", "<cmd>qa!<cr>")
 vim.keymap.set("n", "<C-q>", "<cmd>q!<cr>")
 vim.keymap.set("n", "<leader>e", "<cmd>Neotree toggle<cr>")
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>")
@@ -60,6 +61,9 @@ end)
 vim.keymap.set("n", "<leader>sh", function()
 	Snacks.picker.help()
 end)
+vim.keymap.set("n", "<leader>sk", function()
+	Snacks.picker.keymaps()
+end)
 vim.keymap.set("n", "<leader>sd", function()
 	Snacks.picker.diagnostics()
 end)
@@ -79,6 +83,10 @@ vim.keymap.set("n", "<C-h>", "<C-w>h")
 vim.keymap.set("n", "<C-j>", "<C-w>j")
 vim.keymap.set("n", "<C-k>", "<C-w>k")
 vim.keymap.set("n", "<C-l>", "<C-w>l")
+vim.keymap.set("n", "<C-A-h>", "10<C-w><")
+vim.keymap.set("n", "<C-A-j>", "5<C-w>-")
+vim.keymap.set("n", "<C-A-k>", "5<C-w>+")
+vim.keymap.set("n", "<C-A-l>", "10<C-w>>")
 -- terminals
 vim.keymap.set("n", "<C-\\>", function()
 	_G.main_terminal_toggle:toggle()
@@ -171,7 +179,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- blink.cmp --
+-- blink.cmp (completion)--
 vim.pack.add({
 	{ src = "https://github.com/saghen/blink.cmp", version = "v1.10.2" },
 })
@@ -187,6 +195,12 @@ require("blink.cmp").setup({
 	completion = {
 		documentation = { auto_show = true },
 	},
+})
+
+-- lsp_signature.nvim (function signature while typing params/arguments) --
+vim.pack.add({ "https://github.com/ray-x/lsp_signature.nvim" })
+require("lsp_signature").setup({
+	zindex = 1000,
 })
 
 -- snacks (pickers and more) --
@@ -305,10 +319,6 @@ for _, mode in ipairs({ "normal", "insert", "visual", "replace", "command", "ina
 	end
 end
 
--- merged cmdline
-vim.o.cmdheight = 0
-vim.o.laststatus = 3
-
 function IsRecording()
 	local reg = vim.fn.reg_recording()
 	if reg == "" then
@@ -414,6 +424,14 @@ end
 -- satellite.nvim (scrollbar) --
 vim.pack.add({
 	"https://github.com/lewis6991/satellite.nvim",
+})
+
+-- fidget.nvim (notification/status msgs) --
+vim.pack.add({ "https://github.com/j-hui/fidget.nvim" })
+require("fidget").setup({
+	notification = {
+		override_vim_notify = true,
+	},
 })
 
 -- mini.pairs (autopairs) --
