@@ -6,6 +6,7 @@
 -- - stylua
 -- - fd (fast alternative to find, used by projects search)
 -- - roslyn-language-server (for c#)
+-- - gopls (for go) `go install golang.org/x/tools/gopls@latest`
 
 -- opts --
 vim.g.mapleader = " "
@@ -166,14 +167,18 @@ vim.lsp.config("roslyn", {
 })
 vim.lsp.enable("roslyn")
 
+-- gopls
+vim.lsp.config("gopls", {})
+vim.lsp.enable({ "gopls" })
+
 -- treesitter --
 vim.pack.add({
 	"https://github.com/neovim-treesitter/nvim-treesitter",
 	"https://github.com/neovim-treesitter/treesitter-parser-registry",
 })
-require("nvim-treesitter").install({ "lua", "rust", "c", "odin" })
+require("nvim-treesitter").install({ "lua", "rust", "c", "odin", "go" })
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "lua", "rust", "c", "odin" },
+	pattern = { "lua", "rust", "c", "odin", "go" },
 	callback = function()
 		vim.treesitter.start() -- highlighting
 		vim.wo.foldexpr = "v:lua.treesitter.foldexpr()" -- folds
@@ -362,6 +367,7 @@ vim.pack.add({
 require("conform").setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
+		go = { "gofmt" },
 	},
 })
 
