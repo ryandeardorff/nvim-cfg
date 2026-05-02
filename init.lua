@@ -35,6 +35,21 @@ vim.keymap.set("v", "<leader>gd", [[<cmd>'<,'>DiffviewFileHistory<cr>]])
 vim.keymap.set("v", "<leader>cs", "<cmd>Sidekick cli send<cr>")
 vim.keymap.set({ "n", "v" }, "<leader>cp", "<cmd>Sidekick cli prompt<cr>")
 vim.keymap.set("n", "<leader>co", "<cmd>Sidekick cli toggle<cr>")
+vim.keymap.set("n", "<leader>cr", function()
+	-- Relaunch the currently attached Sidekick CLI in the current cwd.
+	local State = require("sidekick.cli.state")
+	local cli = require("sidekick.cli")
+	State.with(function(state)
+		if not state then
+			return
+		end
+		local name = state.tool.name
+		State.detach(state)
+		vim.schedule(function()
+			cli.show({ name = name, focus = true })
+		end)
+	end, { filter = { attached = true } })
+end, { desc = "Sidekick: relaunch selected CLI in cwd" })
 vim.keymap.set("n", "<Esc>", function()
 	if vim.v.hlsearch == 1 then
 		vim.cmd("nohlsearch")
