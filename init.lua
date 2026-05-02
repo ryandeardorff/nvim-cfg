@@ -7,6 +7,7 @@
 -- - fd (fast alternative to find, used by projects search)
 -- - roslyn-language-server (for c#)
 -- - gopls (for go) `go install golang.org/x/tools/gopls@latest`
+-- - basedpyright (for python) `uv tool install basedpyright`
 
 -- opts --
 vim.g.mapleader = " "
@@ -101,6 +102,12 @@ end)
 function _G.set_terminal_keymaps()
 	local opts = { buffer = 0 }
 	vim.keymap.set("t", "<esc><esc>", [[<C-\><C-n>]], opts) -- pop out of terminal input while staying in term
+	-- forward Shift+Enter as a raw LF byte so embedded TUIs (e.g. pi) treat it
+	-- as Ctrl+J / newline. Without this nvim sends a bare \r (=Enter/submit).
+	-- LF works regardless of whether the inner program negotiated kitty mode.
+	vim.keymap.set("t", "<S-CR>", function()
+		vim.api.nvim_chan_send(vim.b.terminal_job_id, "\n")
+	end, opts)
 	-- navigation & management
 	vim.keymap.set("t", "<C-h>", [[<cmd>wincmd h<cr>]], opts)
 	vim.keymap.set("t", "<C-j>", [[<cmd>wincmd j<cr>]], opts)
@@ -171,14 +178,18 @@ vim.lsp.enable("roslyn")
 vim.lsp.config("gopls", {})
 vim.lsp.enable({ "gopls" })
 
+-- basedpyright
+vim.lsp.config("basedpyright", {})
+vim.lsp.enable({ "basedpyright" })
+
 -- treesitter --
 vim.pack.add({
 	"https://github.com/neovim-treesitter/nvim-treesitter",
 	"https://github.com/neovim-treesitter/treesitter-parser-registry",
 })
-require("nvim-treesitter").install({ "lua", "rust", "c", "odin", "go" })
+require("nvim-treesitter").install({ "lua", "rust", "c", "odin", "go", "python" })
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "lua", "rust", "c", "odin", "go" },
+	pattern = { "lua", "rust", "c", "odin", "go", "python"},
 	callback = function()
 		vim.treesitter.start() -- highlighting
 		vim.wo.foldexpr = "v:lua.treesitter.foldexpr()" -- folds
