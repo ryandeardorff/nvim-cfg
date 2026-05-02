@@ -116,7 +116,9 @@ vim.keymap.set("n", "<leader>\\", function()
 end)
 function _G.set_terminal_keymaps()
 	local opts = { buffer = 0 }
-	vim.keymap.set("t", "<esc><esc>", [[<C-\><C-n>]], opts) -- pop out of terminal input while staying in term
+	vim.keymap.set("t", "<S-Esc>", [[<C-\><C-n>]], opts) -- pop out of terminal input while staying in term
+	-- fallback: raw CSI u sequence for Shift+Esc (sent by Windows Terminal)
+	vim.keymap.set("t", "\27[27;2u", [[<C-\><C-n>]], opts)
 	-- forward Shift+Enter as a raw LF byte so embedded TUIs (e.g. pi) treat it
 	-- as Ctrl+J / newline. Without this nvim sends a bare \r (=Enter/submit).
 	-- LF works regardless of whether the inner program negotiated kitty mode.
