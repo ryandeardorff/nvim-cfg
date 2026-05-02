@@ -464,59 +464,11 @@ end
 vim.pack.add({
 	"https://github.com/lewis6991/satellite.nvim",
 })
+---@diagnostic disable-next-line: missing-fields
 require("satellite").setup({
-	current_only = false,
-	winblend = 50,
-	-- Must be lower than any floating-window zindex we want to draw over the
-	-- bar (snacks dashboard uses zindex = 10). Default is 40.
+	-- Must be below any float we want to draw over the bar
+	-- (snacks dashboard uses zindex = 10). Default is 40.
 	zindex = 5,
-	excluded_filetypes = {
-		"snacks_dashboard",
-		"dashboard",
-		"alpha",
-		"starter",
-		"neo-tree",
-		"NvimTree",
-		"lazy",
-		"mason",
-		"help",
-	},
-	handlers = {
-		cursor = { enable = true, overlap = true, priority = 100 },
-		search = { enable = true, overlap = true, priority = 10 },
-		diagnostic = { enable = true, overlap = true, priority = 50 },
-		gitsigns = { enable = true, overlap = false, priority = 20 },
-		marks = { enable = true, overlap = true, priority = 60, key = "m", show_builtins = false },
-		quickfix = { enable = true, overlap = true, priority = 60 },
-	},
-})
-
--- The dashboard is a *floating* window over your normal window, so
--- excluded_filetypes never matches (satellite checks the underlying window's
--- buffer). Hide bars entirely while a dashboard-like buffer is showing, and
--- refresh once it goes away.
-local satellite_hide_fts = {
-	snacks_dashboard = true,
-	dashboard = true,
-	alpha = true,
-	starter = true,
-}
-local function any_hide_ft_visible()
-	for _, win in ipairs(vim.api.nvim_list_wins()) do
-		local buf = vim.api.nvim_win_get_buf(win)
-		if satellite_hide_fts[vim.bo[buf].filetype] then return true end
-	end
-	return false
-end
-vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter", "BufWinLeave", "WinClosed" }, {
-	group = vim.api.nvim_create_augroup("satellite_dashboard_hide", { clear = true }),
-	callback = function()
-		vim.schedule(function()
-			local ok, view = pcall(require, "satellite.view")
-			if not ok then return end
-			if any_hide_ft_visible() then view.remove_bars() else view.refresh_bars() end
-		end)
-	end,
 })
 
 -- fidget.nvim (notification/status msgs) --
