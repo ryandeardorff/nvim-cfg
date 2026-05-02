@@ -115,7 +115,9 @@ function _G.set_terminal_keymaps()
 	vim.keymap.set("t", "<C-l>", [[<cmd>wincmd l<cr>]], opts)
 	vim.keymap.set("t", "<C-q>", [[<cmd>q!<cr>]], opts)
 	vim.keymap.set("t", "<C-\\>", [[<cmd>lua _G.main_terminal_toggle:toggle()<cr>]])
-	vim.keymap.set("t", "<leader>\\", [[<cmd>lua _G.new_terminal()<cr>]])
+	-- NOTE: do NOT map any terminal-mode binding starting with <leader> (space).
+	-- It causes Neovim to swallow <space> in terminals/lazygit while it waits
+	-- timeoutlen for a possible follow-up key, making the cursor appear stuck.
 end
 vim.cmd("autocmd! TermOpen term://* lua set_terminal_keymaps()")
 
