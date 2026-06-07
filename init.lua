@@ -8,6 +8,7 @@
 -- - roslyn-language-server (for c#)
 -- - gopls (for go) `go install golang.org/x/tools/gopls@latest`
 -- - basedpyright (for python) `uv tool install basedpyright`
+-- - cmake (for cmake c++ projects)
 -- - clangd (for c++ lsp)
 -- - codelldb (for c++ and rust debug)-- download from https://github.com/vadimcn/codelldb/releases and unzip to nvim-data/codelldb
 
