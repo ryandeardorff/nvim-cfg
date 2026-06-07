@@ -8,6 +8,8 @@
 -- - roslyn-language-server (for c#)
 -- - gopls (for go) `go install golang.org/x/tools/gopls@latest`
 -- - basedpyright (for python) `uv tool install basedpyright`
+-- - clangd (for c++ lsp)
+-- - codelldb (for c++ and rust debug)-- download from https://github.com/vadimcn/codelldb/releases and unzip to nvim-data/codelldb
 
 -- opts --
 vim.g.mapleader = " "
@@ -107,6 +109,37 @@ vim.keymap.set("n", "<C-A-h>", "10<C-w><")
 vim.keymap.set("n", "<C-A-j>", "5<C-w>-")
 vim.keymap.set("n", "<C-A-k>", "5<C-w>+")
 vim.keymap.set("n", "<C-A-l>", "10<C-w>>")
+-- dap-ui (debugging)
+vim.keymap.set("n", "<leader>dt", function()
+	require("dapui").toggle()
+end)
+vim.keymap.set("n", "<F5>", function()
+	if require("dap").session() == nil then
+		-- attempt CMakeDebug when there is no active session
+		if require("cmake-tools").is_cmake_project() then
+			vim.cmd("CMakeDebug")
+			require("dapui").open()
+		end
+	else
+		require("dap").continue()
+	end
+end)
+vim.keymap.set("n", "<S-F5>", function()
+	require("dap").close()
+	require("dapui").close()
+end)
+vim.keymap.set("n", "<F11>", function()
+	require("dap").step_into()
+end)
+vim.keymap.set("n", "<F10>", function()
+	require("dap").step_over()
+end)
+vim.keymap.set("n", "<F12>", function()
+	require("dap").step_out()
+end)
+vim.keymap.set("n", "<F9>", function()
+	require("dap").toggle_breakpoint()
+end)
 -- terminals
 vim.keymap.set("n", "<C-\\>", function()
 	_G.main_terminal_toggle:toggle()
@@ -200,6 +233,10 @@ vim.lsp.enable({ "gopls" })
 -- basedpyright
 vim.lsp.config("basedpyright", {})
 vim.lsp.enable({ "basedpyright" })
+
+-- clangd
+vim.lsp.config("clangd", {})
+vim.lsp.enable({ "clangd" })
 
 -- treesitter --
 vim.pack.add({
@@ -513,3 +550,40 @@ vim.pack.add({
 	{ src = "https://github.com/folke/sidekick.nvim" },
 })
 require("sidekick").setup({})
+
+-- nvim.dap (debugger)
+vim.pack.add({ "https://github.com/mfussenegger/nvim-dap" })
+local dap = require("dap")
+
+local codelldb_root = vim.fn.stdpath("data") .. "/codelldb/extension"
+dap.adapters.codelldb = {
+	type = "server",
+	port = "${port}",
+	executable = {
+		command = codelldb_root .. "/adapter/codelldb.exe",
+		args = { "--port", "${port}" },
+		detached = false, -- required on windows or the adapter process is orphaned
+	},
+}
+
+vim.pack.add({ "https://github.com/nvim-neotest/nvim-nio" }) -- dap-ui dependency
+vim.pack.add({ "https://github.com/rcarriga/nvim-dap-ui" })
+require("dapui").setup()
+
+-- cmake-tools.nvim
+-- required plenery
+vim.pack.add({ "https://github.com/nvim-lua/plenary.nvim" })
+vim.pack.add({ "https://github.com/Civitasv/cmake-tools.nvim" })
+require("cmake-tools").setup({
+	cmake_dap_configuration = {
+		name = "codelldb",
+		type = "codelldb",
+		request = "launch",
+		stopOnEntry = false,
+	},
+	cmake_compile_commands_options = {
+		action = "copy",
+	},
+	cmake_dap_open_command = require("dapui").open,
+	cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1", "-G", "Ninja" }, -- use ninja generator so that on msvc we get compile_commands.json
+})
