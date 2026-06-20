@@ -11,6 +11,8 @@
 -- - cmake (for cmake c++ projects)
 -- - clangd (for c++ lsp)
 -- - codelldb (for c++ and rust debug)-- download from https://github.com/vadimcn/codelldb/releases and unzip to nvim-data/codelldb
+-- - rust-analyzer (for rust lsp)
+-- - rustfmt (for rust formatting)
 
 -- opts --
 vim.g.mapleader = " "
@@ -239,6 +241,10 @@ vim.lsp.enable({ "basedpyright" })
 vim.lsp.config("clangd", {})
 vim.lsp.enable({ "clangd" })
 
+-- rust_analyzer
+vim.lsp.config("rust_analyzer", {})
+vim.lsp.enable({ "rust_analyzer" })
+
 -- treesitter --
 vim.pack.add({
 	"https://github.com/neovim-treesitter/nvim-treesitter",
@@ -438,6 +444,7 @@ require("conform").setup({
 		go = { "gofmt" },
 		c = { "clang-format" },
 		cpp = { "clang-format" },
+		rust = { "rustfmt" },
 	},
 })
 
