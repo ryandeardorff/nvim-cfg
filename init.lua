@@ -13,6 +13,7 @@
 -- - codelldb (for c++ and rust debug)-- download from https://github.com/vadimcn/codelldb/releases and unzip to nvim-data/codelldb
 -- - rust-analyzer (for rust lsp)
 -- - rustfmt (for rust formatting)
+-- - ols (odin language server)
 
 -- opts --
 vim.g.mapleader = " "
@@ -244,6 +245,10 @@ vim.lsp.enable({ "clangd" })
 -- rust_analyzer
 vim.lsp.config("rust_analyzer", {})
 vim.lsp.enable({ "rust_analyzer" })
+
+-- ols (odin language server)
+vim.lsp.config("ols", {})
+vim.lsp.enable({ "ols" })
 
 -- treesitter --
 vim.pack.add({
