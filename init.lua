@@ -450,6 +450,7 @@ require("conform").setup({
 		c = { "clang-format" },
 		cpp = { "clang-format" },
 		rust = { "rustfmt" },
+		odin = { "odinfmt" },
 	},
 })
 
