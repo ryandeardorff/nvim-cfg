@@ -343,6 +343,7 @@ vim.pack.add({
 	"https://github.com/olimorris/onedarkpro.nvim",
 	"https://github.com/AlexvZyl/nordic.nvim",
 	"https://github.com/slugbyte/lackluster.nvim",
+	"https://github.com/ramojus/mellifluous.nvim",
 })
 
 -- color scheme loading --
@@ -377,6 +378,15 @@ vim.keymap.set("n", "<leader>th", function()
 	})
 end, { desc = "Pick colorscheme" })
 
+-- toggle color scheme
+vim.keymap.set("n", "<leader>tt", function()
+	if vim.o.background == "dark" then
+		vim.o.background = "light"
+	else
+		vim.o.background = "dark"
+	end
+end, { desc = "Toggle light/dark color scheme" })
+
 -- lualine (status line) --
 vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
@@ -395,16 +405,54 @@ local function get_fg(group)
 	return hex(hl.fg)
 end
 
-local theme = require("lualine.themes.auto")
-for _, mode in ipairs({ "normal", "insert", "visual", "replace", "command", "inactive" }) do
-	theme[mode] = theme[mode] or {}
-	local bg = get_bg("Normal")
-	theme[mode].a.fg = theme[mode].a.bg
-	for _, section in ipairs({ "a", "b", "c" }) do
-		theme[mode][section] = theme[mode][section] or {}
-		theme[mode][section].bg = bg
+local function form_lualine_theme()
+	local theme = require("lualine.themes.auto")
+	-- if vim.o.background == "light" then
+	-- 	return theme
+	-- end
+	for _, mode in ipairs({ "normal", "insert", "visual", "replace", "command", "inactive" }) do
+		theme[mode] = theme[mode] or {}
+		local bg = get_bg("Normal")
+		theme[mode].a.fg = theme[mode].a.bg
+		for _, section in ipairs({ "a", "b", "c", "z"}) do
+			theme[mode][section] = theme[mode][section] or {}
+			theme[mode][section].bg = bg
+		end
 	end
+	return theme
 end
+
+local function setup_lualine()
+	require("lualine").setup({
+		options = {
+			theme = form_lualine_theme(),
+			component_separators = "",
+			section_separators = { left = "", right = "" },
+		},
+		sections = {
+			lualine_a = { {
+				"mode",
+				fmt = function(str)
+					return string.lower(str):sub(1, 1)
+				end,
+			} },
+			lualine_b = { { "branch", icon = "", color = { fg = get_fg("Special") } }, "diff" },
+			lualine_c = { '"⋅"', "filename" },
+			lualine_x = {},
+			lualine_y = { { "IsRecording()", color = { fg = get_fg("Error") } }, "diagnostics" },
+			lualine_z = { "selectioncount", "progress" },
+		},
+	})
+end
+
+setup_lualine()
+
+-- refresh lualine (re-setup) on color scheme change
+vim.api.nvim_create_autocmd("ColorScheme", {
+	callback = function()
+		setup_lualine()
+	end,
+})
 
 function IsRecording()
 	local reg = vim.fn.reg_recording()
@@ -417,27 +465,6 @@ function IsRecording()
 	}
 	return animated[os.date("%S") % #animated + 1] .. " " .. reg
 end
-
-require("lualine").setup({
-	options = {
-		theme = theme,
-		component_separators = "",
-		section_separators = { left = "", right = "" },
-	},
-	sections = {
-		lualine_a = { {
-			"mode",
-			fmt = function(str)
-				return string.lower(str):sub(1, 1)
-			end,
-		} },
-		lualine_b = { { "branch", icon = "", color = { fg = get_fg("Special") } }, "diff" },
-		lualine_c = { '"⋅"', "filename" },
-		lualine_x = {},
-		lualine_y = { { "IsRecording()", color = { fg = get_fg("Error") } }, "diagnostics" },
-		lualine_z = { "selectioncount", "progress" },
-	},
-})
 
 -- conform.nvim (formatting) --
 vim.pack.add({
