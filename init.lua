@@ -343,7 +343,8 @@ vim.pack.add({
 	"https://github.com/olimorris/onedarkpro.nvim",
 	"https://github.com/AlexvZyl/nordic.nvim",
 	"https://github.com/slugbyte/lackluster.nvim",
-	"https://github.com/ramojus/mellifluous.nvim",
+	"https://github.com/zenbones-theme/zenbones.nvim",
+	"https://github.com/rktjmp/lush.nvim", -- dependency for zenbones
 })
 
 -- color scheme loading --
@@ -407,9 +408,6 @@ end
 
 local function form_lualine_theme()
 	local theme = require("lualine.themes.auto")
-	-- if vim.o.background == "light" then
-	-- 	return theme
-	-- end
 	for _, mode in ipairs({ "normal", "insert", "visual", "replace", "command", "inactive" }) do
 		theme[mode] = theme[mode] or {}
 		local bg = get_bg("Normal")

@@ -21,6 +21,10 @@
       "rev": "889e2e96edef4e144965571d46f7a77bcc4d0ddf",
       "src": "https://github.com/j-hui/fidget.nvim"
     },
+    "github-monochrome.nvim": {
+      "rev": "e77321ecd5a68f020d9c543592e222d7786169bf",
+      "src": "https://github.com/idr4n/github-monochrome.nvim"
+    },
     "gitsigns.nvim": {
       "rev": "8d82c240f190fc33723d48c308ccc1ed8baad69d",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
@@ -45,6 +49,10 @@
       "rev": "a905eeebc4e63fdc48b5135d3bf8aea5618fb21c",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
     },
+    "lush.nvim": {
+      "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
+      "src": "https://github.com/rktjmp/lush.nvim"
+    },
     "mellifluous.nvim": {
       "rev": "ec0575bdb63594c5e7fba6eb9607b009aa1fb74e",
       "src": "https://github.com/ramojus/mellifluous.nvim"
@@ -52,6 +60,14 @@
     "mini.pairs": {
       "rev": "42387c7fe68fc0b6e95eaf37f1bb76e7bffaa0d9",
       "src": "https://github.com/nvim-mini/mini.pairs"
+    },
+    "modus-theme-vim": {
+      "rev": "4d827fbf1aad55f4d62225f7b999efc5023864a3",
+      "src": "https://github.com/ishan9299/modus-theme-vim"
+    },
+    "monochrome.nvim": {
+      "rev": "2de78d9688ea4a177bcd9be554ab9192337d35ff",
+      "src": "https://github.com/kdheepak/monochrome.nvim"
     },
     "neo-tree.nvim": {
       "rev": "84c75e7a7e443586f60508d12fc50f90d9aee14e",
@@ -145,6 +161,10 @@
     "treesitter-parser-registry": {
       "rev": "6eb15358bb9fc88f0d3401d8538d56652e9bdf3c",
       "src": "https://github.com/neovim-treesitter/treesitter-parser-registry"
+    },
+    "zenbones.nvim": {
+      "rev": "8304d8df9b823ff11e103afa62f38c39f534abe6",
+      "src": "https://github.com/zenbones-theme/zenbones.nvim"
     }
   }
 }
